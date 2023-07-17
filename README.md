@@ -1,5 +1,2 @@
 # Picky-backend
-
-
-
-start
+dev
