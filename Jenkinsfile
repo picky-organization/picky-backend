@@ -1,7 +1,5 @@
 pipeline{
 	agent any
-	environment {
-	}
 	stages {
 		stage('Gradle Build picky-backend') {
 			steps {
@@ -14,8 +12,6 @@ pipeline{
 		    }
 		}
 		stage('Docker build & push'){
-		    steps{
-		    }
 		}
 	}
 }
