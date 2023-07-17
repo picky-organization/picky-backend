@@ -11,7 +11,5 @@ pipeline{
 		        sh './gradlew test'
 		    }
 		}
-		stage('Docker build & push'){
-		}
 	}
 }
