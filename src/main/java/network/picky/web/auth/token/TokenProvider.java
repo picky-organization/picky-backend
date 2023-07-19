@@ -2,7 +2,7 @@ package network.picky.web.auth.token;
 
 import network.picky.web.auth.dto.AuthUser;
 
-public interface TokenManager {
+public interface TokenProvider {
 
     String createAccessToken(AuthUser authUser);
     String createRefreshToken(AuthUser authUser);
