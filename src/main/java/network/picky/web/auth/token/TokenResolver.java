@@ -2,6 +2,7 @@ package network.picky.web.auth.token;
 
 import jakarta.servlet.http.HttpServletRequest;
 import network.picky.web.auth.exception.TokenAuthenticationException;
+import network.picky.web.auth.exception.TokenInvalidException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +19,6 @@ public class TokenResolver {
                 return token;
             }
         }
-        throw new TokenAuthenticationException();
+        throw new TokenInvalidException();
     }
 }

@@ -2,6 +2,7 @@ package network.picky.web.config;
 
 import lombok.RequiredArgsConstructor;
 import network.picky.web.auth.filter.JwtAuthenticationFilter;
+import network.picky.web.auth.provider.JwtAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,16 +16,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class AuthenticationConfig {
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Bean
-    public ProviderManager providerManager(AuthenticationProvider provider){
+    public ProviderManager providerManager(JwtAuthenticationProvider provider){
         return new ProviderManager(provider);
     }
 }

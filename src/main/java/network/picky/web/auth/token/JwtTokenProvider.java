@@ -44,11 +44,15 @@ public class JwtTokenProvider implements TokenProvider {
 
 	@Override
 	public String createRefreshToken(AuthUser authUser) {
+		Role role = authUser.getRole();
+		Map<String, Object> claim = new HashMap<>();
+		claim.put("role", role);
 		Date now = new Date();
-		Date expiration = new Date(now.getTime() + this.accessTokenExpiredMilliseconds);
+		Date expiration = new Date(now.getTime() + this.refreshTokenExpiredMilliseconds);
 
 		return Jwts.builder()
 				.setSubject(authUser.getId().toString())
+				.addClaims(claim)
 				.setIssuedAt(now)
 				.setExpiration(expiration).signWith(key).compact();
 	}
