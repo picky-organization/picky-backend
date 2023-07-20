@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import network.picky.web.auth.dto.OAuth2UserInfo;
+import network.picky.web.auth.enums.AuthProvider;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +20,8 @@ public class Member extends BaseEntity{
     private Long id;
 
     private String email;
+
+    private String oauth2Id;
 
     private String picture;
 
@@ -36,6 +40,9 @@ public class Member extends BaseEntity{
     private String commentNotice;
 
     @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     private int projectCount;
@@ -47,8 +54,9 @@ public class Member extends BaseEntity{
     private LocalDateTime modifiedDataTime;
 
     @Builder
-    public Member(String email, String picture, String name, String introduce, String field, String github, String facebook, String instagram, String commentNotice, Role role, int projectCount, int projectCommentCount, LocalDateTime createDateTime, LocalDateTime modifiedDataTime) {
+    public Member(String email, String oauth2Id, String picture, String name, String introduce, String field, String github, String facebook, String instagram, String commentNotice, AuthProvider authProvider, Role role, int projectCount, int projectCommentCount, LocalDateTime createDateTime, LocalDateTime modifiedDataTime) {
         this.email = email;
+        this.oauth2Id = oauth2Id;
         this.picture = picture;
         this.name = name;
         this.introduce = introduce;
@@ -57,11 +65,19 @@ public class Member extends BaseEntity{
         this.facebook = facebook;
         this.instagram = instagram;
         this.commentNotice = commentNotice;
+        this.authProvider = authProvider;
         this.role = role;
         this.projectCount = projectCount;
         this.projectCommentCount = projectCommentCount;
         this.createDateTime = createDateTime;
         this.modifiedDataTime = modifiedDataTime;
+    }
+
+    public Member update(OAuth2UserInfo oAuth2UserInfo) {
+        this.name = oAuth2UserInfo.getName();
+        this.oauth2Id = oAuth2UserInfo.getOAuth2Id();
+
+        return this;
     }
 
 }

@@ -8,6 +8,12 @@ plugins {
 group = 'network'
 version = '0.0.1-SNAPSHOT'
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
 java {
 	sourceCompatibility = '17'
 }
@@ -19,7 +25,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 
-	implementation 'org.springframework.boot:spring-book-stater-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
@@ -28,6 +34,19 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.h2database:h2'
+
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 }
 
 tasks.named('test') {
