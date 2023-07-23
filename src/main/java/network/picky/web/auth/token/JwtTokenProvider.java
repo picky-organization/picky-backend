@@ -8,20 +8,26 @@ import java.util.Map;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import network.picky.web.auth.dto.AuthUser;
+import network.picky.web.auth.exception.TokenInvalidException;
+import network.picky.web.auth.exception.TokenParsingException;
 import network.picky.web.member.domain.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
-public class JwtTokenProvider implements TokenProvider {
+public class JwtTokenProvider implements TokenProvider{
+	public static final String AUTHORIZATION_PREFIX = "Bearer";
+
 	private final Key key;
-	private final Long accessTokenExpiredMilliseconds;
-	private final Long refreshTokenExpiredMilliseconds;
+	private final int accessTokenExpiredMilliseconds;
+	private final int refreshTokenExpiredMilliseconds;
 
 	public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
-							@Value("${security.jwt.token.expired.access}") Long accessTokenExpiredMilliseconds,
-							@Value("${security.jwt.token.expired.refresh}") Long refreshTokenExpiredMilliseconds) {
+							@Value("${security.jwt.token.expired.access}") int accessTokenExpiredMilliseconds,
+							@Value("${security.jwt.token.expired.refresh}") int refreshTokenExpiredMilliseconds) {
 		byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 		this.accessTokenExpiredMilliseconds = accessTokenExpiredMilliseconds;
@@ -29,8 +35,8 @@ public class JwtTokenProvider implements TokenProvider {
 	}
 
 	public String createAccessToken(AuthUser authUser) {
-		Role role = authUser.getRole();
 		Map<String, Object> claim = new HashMap<>();
+		Role role = authUser.getRole();
 		claim.put("role", role);
 		Date now = new Date();
 		Date expiration = new Date(now.getTime() + this.accessTokenExpiredMilliseconds);
@@ -64,23 +70,32 @@ public class JwtTokenProvider implements TokenProvider {
 					.build()
 					.parseClaimsJws(token);
 			return !claims.getBody().getExpiration().before(new Date());
-		} catch (JwtException | IllegalArgumentException e) {
-			return false;
+		} catch (SecurityException | MalformedJwtException e) {
+			log.debug("Invalid JWT Token", e);
+		} catch (ExpiredJwtException e) {
+			log.debug("Expired JWT Token", e);
+		} catch (UnsupportedJwtException e) {
+			log.debug("Unsupported JWT Token", e);
+		} catch (IllegalArgumentException e) {
+			log.debug("JWT claims string is empty.", e);
 		}
+		return false;
 	}
 
 	public AuthUser getParseClaims(String token) {
 		Claims body = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-		Long id = Long.parseLong(body.getSubject());
-		Role role = (Role) body.get("role");
-		AuthUser authUser = new AuthUser(id, role);
-
-		return authUser;
+		try {
+			Long id = Long.parseLong(body.getSubject());
+			Role role = Role.valueOf(String.valueOf(body.get("role")));
+			AuthUser authUser = new AuthUser(id, role);
+			return authUser;
+		}catch (Exception ex){
+			log.debug("JwtTokenProvider parsing faild");
+			throw new TokenParsingException();
+		}
 	}
 
-
 	public String createAuthorizationScheme(String token){
-		final String AUTHORIZATION_PREFIX = "Bearer";
 
 		return AUTHORIZATION_PREFIX + " " + token;
 	}

@@ -1,5 +1,6 @@
 package network.picky.web.auth.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import network.picky.web.member.domain.Role;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collections;
 import java.util.Set;
 
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class RoleGrant implements GrantedAuthority {
     private final Role role;
