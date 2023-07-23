@@ -1,5 +1,6 @@
 package network.picky.web.member.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

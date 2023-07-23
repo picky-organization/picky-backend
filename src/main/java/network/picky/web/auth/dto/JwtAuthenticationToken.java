@@ -28,7 +28,9 @@ public class JwtAuthenticationToken  extends AbstractAuthenticationToken  {
     }
 
     public static Authentication authenticated(Long id, String token, Collection<? extends GrantedAuthority> authorities){
-        return new JwtAuthenticationToken(id, token, authorities);
+        Authentication result = new JwtAuthenticationToken(id, token, authorities);
+        result.setAuthenticated(true);
+        return result;
     }
 
     @Override
