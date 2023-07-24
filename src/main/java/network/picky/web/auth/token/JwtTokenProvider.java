@@ -13,6 +13,7 @@ import network.picky.web.auth.dto.AuthUser;
 import network.picky.web.auth.exception.TokenInvalidException;
 import network.picky.web.auth.exception.TokenParsingException;
 import network.picky.web.member.domain.Role;
+import network.picky.web.member.dto.MemberResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,8 @@ public class JwtTokenProvider implements TokenProvider{
 		this.refreshTokenExpiredMilliseconds = refreshTokenExpiredMilliseconds;
 	}
 
+
+	@Override
 	public String createAccessToken(AuthUser authUser) {
 		Map<String, Object> claim = new HashMap<>();
 		Role role = authUser.getRole();
@@ -62,6 +65,19 @@ public class JwtTokenProvider implements TokenProvider{
 				.setIssuedAt(now)
 				.setExpiration(expiration).signWith(key).compact();
 	}
+
+//	public MemberResponseDto.TokenInfo generateToken(AuthUser authUser){
+//		String accessToken = createAccessToken(authUser);
+//		String refreshToken = createRefreshToken(authUser);
+//
+//		return MemberResponseDto.TokenInfo.builder()
+//				.grantType(AUTHORIZATION_PREFIX)
+//				.accessToken(accessToken)
+//				.accessTokenExpirationTime(this.accessTokenExpiredMilliseconds)
+//				.refreshToken(refreshToken)
+//				.refreshTokenExpirationTime(this.refreshTokenExpiredMilliseconds)
+//				.build();
+//	}
 
 	public boolean validToken(String token) {
 		try {

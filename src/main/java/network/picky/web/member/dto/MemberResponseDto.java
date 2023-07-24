@@ -10,11 +10,11 @@ public class MemberResponseDto {
     public static class TokenInfo {
         private String grantType;
         private String accessToken;
-        private Long accessTokenExpirationTime;
+        private int accessTokenExpirationTime;
         private String refreshToken;
-        private Long refreshTokenExpirationTime;
+        private int refreshTokenExpirationTime;
 
-        public TokenInfo(String grantType, String accessToken, Long accessTokenExpirationTime, String refreshToken, Long refreshTokenExpirationTime) {
+        public TokenInfo(String grantType, String accessToken, int accessTokenExpirationTime, String refreshToken, int refreshTokenExpirationTime) {
             this.grantType = grantType;
             this.accessToken = accessToken;
             this.accessTokenExpirationTime = accessTokenExpirationTime;

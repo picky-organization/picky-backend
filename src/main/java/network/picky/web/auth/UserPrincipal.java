@@ -19,9 +19,9 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     private Long id;
     private String email;
-    private Collection<? extends GrantedAuthority> authorities;
+    private List<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String email, Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes) {
+    public UserPrincipal(Long id, String email, List<? extends GrantedAuthority> authorities, Map<String, Object> attributes) {
         this.id = id;
         this.email = email;
         this.authorities = authorities;
@@ -31,7 +31,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     @Setter
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long id, String email, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String email, List<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.authorities = authorities;
@@ -75,7 +75,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public List<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 
