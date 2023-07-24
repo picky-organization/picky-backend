@@ -35,16 +35,19 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.NEVER));
+                .rememberMe(rememberMe -> rememberMe.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         //요청에 대한 권한 설정
-        http.authorizeRequests(authorize -> authorize
+        http
+                .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/oauth2/**").permitAll()
                 .requestMatchers("/auth/refresh").permitAll()
                 .anyRequest().authenticated());
 
         //oauth2Login
-        http.oauth2Login(oauth-> oauth
+        http
+                .oauth2Login(oauth-> oauth
                         .authorizationEndpoint(endpoint->endpoint
                                 .baseUri("/oauth2/authorize")
                                 .authorizationRequestRepository(cookieAuthorizationRequestRepository))
@@ -52,11 +55,13 @@ public class SecurityConfig {
                                 .baseUri("/oauth2/callback/*"))
                         .userInfoEndpoint(info->info
                                 .userService(customOAuth2UserService))
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-//                        .failureHandler(oAuth2AuthenticationFailureHandler)
-        );
+                        .successHandler(oAuth2AuthenticationSuccessHandler));
+//                        .failureHandler(oAuth2AuthenticationFailureHandler));
 
-        http.logout(logout->logout.clearAuthentication(true));
+        http
+                .logout(logout->logout
+                        .clearAuthentication(true));
+
         return http.build();
     }
 }
