@@ -9,7 +9,6 @@ import network.picky.web.auth.dto.AuthUser;
 import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.token.JwtTokenProvider;
 import network.picky.web.member.domain.Role;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -23,7 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${oauth.authorizedRedirectUri}")
+//    @Value("${oauth.authorizedRedirectUri}")
     private String redirectUri;
     private final JwtTokenProvider jwtTokenProvider;
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
@@ -40,7 +39,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //        clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
-        UserPrincipal userPrincipal = (UserPrincipal) authentication;
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         String authority = userPrincipal.getAuthorities().get(0).getAuthority();
         Role role = Role.valueOf(authority);
         AuthUser authUser = new AuthUser(userPrincipal.getId(), role);
@@ -49,7 +48,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String refreshToken = jwtTokenProvider.createRefreshToken(authUser);
         Cookie refreshCookie = new Cookie("refresh_token", refreshToken);
         refreshCookie.setHttpOnly(true);
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge((int)(jwtTokenProvider.getRefreshTokenExpiredMilliseconds()/1000));
         response.addCookie(refreshCookie);
+
         String authorizationScheme = jwtTokenProvider.createAuthorizationScheme(accessToken);
         response.addHeader(HttpHeaders.AUTHORIZATION, authorizationScheme);
     }
