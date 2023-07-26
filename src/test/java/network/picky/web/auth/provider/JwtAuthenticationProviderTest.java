@@ -9,7 +9,7 @@ import network.picky.web.auth.exception.TokenAuthenticationException;
 import network.picky.web.auth.exception.TokenInvalidException;
 import network.picky.web.auth.exception.TokenParsingException;
 import network.picky.web.auth.token.JwtTokenProvider;
-import network.picky.web.member.domain.Role;
+import network.picky.web.member.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

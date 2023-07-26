@@ -2,7 +2,7 @@ package network.picky.web.auth.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import network.picky.web.member.domain.Role;
+import network.picky.web.member.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collections;

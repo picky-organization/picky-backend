@@ -6,7 +6,7 @@ import network.picky.web.auth.UserPrincipal;
 import network.picky.web.auth.dto.OAuth2UserInfo;
 import network.picky.web.auth.enums.AuthProvider;
 import network.picky.web.member.domain.Member;
-import network.picky.web.member.domain.Role;
+import network.picky.web.member.enums.Role;
 import network.picky.web.member.repository.MemberRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -60,16 +60,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Member member = Member.builder()
                 .email(oAuth2UserInfo.getEmail())
                 .name(oAuth2UserInfo.getName())
+                .picture(oAuth2UserInfo.getPicture())
                 .oauth2Id(oAuth2UserInfo.getOAuth2Id())
                 .authProvider(authProvider)
                 .role(Role.USER)
                 .build();
-
         return memberRepository.save(member);
     }
 
     private Member updateMember(Member member, OAuth2UserInfo oAuth2UserInfo) {
-
         return memberRepository.save(member.update(oAuth2UserInfo));
     }
 }
