@@ -3,23 +3,21 @@ package network.picky.web.auth;
 import lombok.Getter;
 import lombok.Setter;
 import network.picky.web.member.domain.Member;
-import network.picky.web.member.domain.Role;
+import network.picky.web.member.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 @Getter
 public class UserPrincipal implements OAuth2User, UserDetails {
-
-    private Long id;
-    private String email;
-    private List<? extends GrantedAuthority> authorities;
+    private final Long id;
+    private final String email;
+    private final List<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(Long id, String email, List<? extends GrantedAuthority> authorities, Map<String, Object> attributes) {
         this.id = id;

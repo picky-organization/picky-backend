@@ -1,7 +1,7 @@
 package network.picky.web.auth.token;
 
 import network.picky.web.auth.dto.AuthUser;
-import network.picky.web.member.domain.Role;
+import network.picky.web.member.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class JwtTokenProviderTest {
         AuthUser authUserParse=this.jwtTokenProvider.getParseClaims(token);
 
         //then
-        assertEquals(authUserParse, authUserParse);
+        assertEquals(authUser, authUserParse);
     }
 
 
@@ -77,7 +77,7 @@ class JwtTokenProviderTest {
         AuthUser authUserParse=this.jwtTokenProvider.getParseClaims(token);
 
         //then
-        assertEquals(authUserParse, authUserParse);
+        assertEquals(authUser, authUserParse);
     }
 
     @Test

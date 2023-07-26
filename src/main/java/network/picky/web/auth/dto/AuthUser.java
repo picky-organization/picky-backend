@@ -1,7 +1,9 @@
 package network.picky.web.auth.dto;
 
-import lombok.*;
-import network.picky.web.member.domain.Role;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import network.picky.web.member.enums.Role;
 
 @Getter
 @EqualsAndHashCode
@@ -9,5 +11,4 @@ import network.picky.web.member.domain.Role;
 public class AuthUser{
     private final Long id;
     private final Role role;
-
 }
