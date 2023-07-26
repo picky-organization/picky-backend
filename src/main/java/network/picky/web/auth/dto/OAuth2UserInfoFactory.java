@@ -1,5 +1,6 @@
-package network.picky.web.auth;
+package network.picky.web.auth.dto;
 
+import network.picky.web.auth.GoogleOAuth2User;
 import network.picky.web.auth.dto.OAuth2UserInfo;
 import network.picky.web.auth.enums.AuthProvider;
 

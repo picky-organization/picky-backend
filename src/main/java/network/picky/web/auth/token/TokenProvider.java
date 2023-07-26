@@ -6,6 +6,7 @@ public interface TokenProvider {
 
     String createAccessToken(AuthUser authUser);
     String createRefreshToken(AuthUser authUser);
+
     boolean validToken(String token);
     AuthUser getParseClaims(String token);
 }

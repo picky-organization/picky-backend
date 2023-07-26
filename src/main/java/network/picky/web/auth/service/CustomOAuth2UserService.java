@@ -1,7 +1,7 @@
 package network.picky.web.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import network.picky.web.auth.OAuth2UserInfoFactory;
+import network.picky.web.auth.dto.OAuth2UserInfoFactory;
 import network.picky.web.auth.UserPrincipal;
 import network.picky.web.auth.dto.OAuth2UserInfo;
 import network.picky.web.auth.enums.AuthProvider;
@@ -52,7 +52,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         else {
             member = registerMember(authProvider, oAuth2UserInfo);
         }
-
+//        DefaultOAuth2User defaultOAuth2User = new DefaultOAuth2User(RoleGrant.createSingleGrant(Role.USER), oAuth2User.getAttributes(), );
         return UserPrincipal.create(member, oAuth2UserInfo.getAttributes());
     }
 

@@ -2,7 +2,7 @@ package network.picky.web.config;
 
 import lombok.RequiredArgsConstructor;
 import network.picky.web.auth.OAuth2AuthenticationFailureHandler;
-import network.picky.web.auth.OAuth2AuthenticationSuccessHandler;
+import network.picky.web.auth.OAuth2AuthenticationSuccessHandler2;
 import network.picky.web.auth.filter.JwtAuthenticationFilter;
 import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.service.CustomOAuth2UserService;
@@ -24,7 +24,7 @@ import java.security.Provider;
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationSuccessHandler2 oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
@@ -55,8 +55,8 @@ public class SecurityConfig {
                                 .baseUri("/oauth2/callback/*"))
                         .userInfoEndpoint(info->info
                                 .userService(customOAuth2UserService))
-                        .successHandler(oAuth2AuthenticationSuccessHandler));
-//                        .failureHandler(oAuth2AuthenticationFailureHandler));
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler));
 
         http
                 .logout(logout->logout

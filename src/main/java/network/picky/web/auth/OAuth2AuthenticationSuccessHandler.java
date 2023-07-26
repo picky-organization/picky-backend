@@ -40,7 +40,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //        clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
-        UserPrincipal userPrincipal = (UserPrincipal) authentication;
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         String authority = userPrincipal.getAuthorities().get(0).getAuthority();
         Role role = Role.valueOf(authority);
         AuthUser authUser = new AuthUser(userPrincipal.getId(), role);
