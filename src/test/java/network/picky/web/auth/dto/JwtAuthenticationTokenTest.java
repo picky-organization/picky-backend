@@ -1,8 +1,7 @@
 package network.picky.web.auth.dto;
 
-import network.picky.web.member.domain.Role;
+import network.picky.web.member.enums.Role;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.core.Authentication;
 
 import java.util.Set;

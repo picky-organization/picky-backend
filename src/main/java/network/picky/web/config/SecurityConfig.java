@@ -3,7 +3,6 @@ package network.picky.web.config;
 import lombok.RequiredArgsConstructor;
 import network.picky.web.auth.OAuth2AuthenticationFailureHandler;
 import network.picky.web.auth.OAuth2AuthenticationSuccessHandler;
-import network.picky.web.auth.OAuthStrategy;
 import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
@@ -23,15 +22,13 @@ public class SecurityConfig {
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-    private final OAuthStrategy oAuthStrategy;
-
     @Bean
     @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //httpBasic, csrf, formLogin, rememberMe, logout, session disable
         http
-                .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
+                .formLogin(form -> form.disable())
                 .csrf(csrf -> csrf.disable())
                 .rememberMe(rememberMe -> rememberMe.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -40,24 +37,20 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/auth").permitAll()
-                .anyRequest().authenticated())
-                .exceptionHandling(hadnle->hadnle.authenticationEntryPoint(new BasicAuthenticationEntryPoint()));
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(handle->handle.authenticationEntryPoint(new BasicAuthenticationEntryPoint()));
 
         //oauth2Login
         http
                 .oauth2Login(oauth-> oauth
-                        .authorizationEndpoint(endpoint->endpoint
-                                .authorizationRequestRepository(cookieAuthorizationRequestRepository))
-//                                .authorizationRedirectStrategy(oAuthStrategy))
+                        .loginPage("/auth/oauth")
                         .userInfoEndpoint(info->info
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2AuthenticationSuccessHandler));
-//                        .failureHandler(oAuth2AuthenticationFailureHandler));
         http
                 .logout(logout->logout
                         .clearAuthentication(true));
-
         return http.build();
     }
 }

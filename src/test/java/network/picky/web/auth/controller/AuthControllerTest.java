@@ -1,11 +1,12 @@
 package network.picky.web.auth.controller;
 
 import jakarta.servlet.http.Cookie;
+import network.picky.web.auth.domain.SavedToken;
 import network.picky.web.auth.dto.AuthUser;
-import network.picky.web.auth.exception.TokenInvalidException;
-import network.picky.web.auth.repository.RefreshTokenRepository;
+import network.picky.web.auth.repository.SavedTokenRepository;
 import network.picky.web.auth.token.JwtTokenProvider;
-import network.picky.web.member.domain.Role;
+import network.picky.web.member.domain.Member;
+import network.picky.web.member.enums.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,7 +34,7 @@ class AuthControllerTest {
         private JwtTokenProvider jwtTokenProvider;
 
         @MockBean
-        private RefreshTokenRepository refreshTokenRepository;
+        private SavedTokenRepository refreshTokenRepository;
 
         @TestConfiguration
         static class AdditionalConfig {
@@ -54,7 +55,7 @@ class AuthControllerTest {
             AuthUser authUser = new AuthUser(id, Role.USER);
             String refreshToken = jwtTokenProvider.createRefreshToken(authUser);
 
-            Mockito.when(refreshTokenRepository.findByRefreshToken(refreshToken)).thenReturn(true);
+            Mockito.when(refreshTokenRepository.findByRefreshToken(refreshToken)).thenReturn(new SavedToken(new Member(id), refreshToken));
             Cookie cookie = new Cookie("refresh_token", refreshToken);
             // when
             ResultActions ra = mvc.perform(get(path).cookie(cookie));
@@ -87,7 +88,6 @@ class AuthControllerTest {
         // given
         String path = "/auth/refresh";
         Long id = 1L;
-        AuthUser authUser = new AuthUser(id, Role.USER);
         Cookie cookie = new Cookie("refresh_token", "");
         // when
         ResultActions ra = mvc.perform(get(path).cookie(cookie));

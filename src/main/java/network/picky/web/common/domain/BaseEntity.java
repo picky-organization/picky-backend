@@ -1,4 +1,4 @@
-package network.picky.web.member.domain;
+package network.picky.web.common.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
