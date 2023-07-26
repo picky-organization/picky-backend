@@ -12,6 +12,7 @@ import network.picky.web.auth.repository.SavedTokenRepository;
 import network.picky.web.auth.token.JwtTokenProvider;
 import network.picky.web.member.domain.Member;
 import network.picky.web.member.enums.Role;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -59,7 +60,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.setStatus(HttpServletResponse.SC_OK);
         log.info(refreshToken);
     }
-
 //    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 //        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
 //                .map(Cookie::getValue);
