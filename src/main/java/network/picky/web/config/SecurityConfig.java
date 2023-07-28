@@ -3,6 +3,7 @@ package network.picky.web.config;
 import lombok.RequiredArgsConstructor;
 import network.picky.web.auth.OAuth2AuthenticationFailureHandler;
 import network.picky.web.auth.OAuth2AuthenticationSuccessHandler;
+import network.picky.web.auth.filter.JwtAuthenticationFilter;
 import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 @Configuration
@@ -22,6 +24,8 @@ public class SecurityConfig {
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Bean
     @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,20 +41,25 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(handle->handle.authenticationEntryPoint(new BasicAuthenticationEntryPoint()));
+                .exceptionHandling(handle -> handle.authenticationEntryPoint(new BasicAuthenticationEntryPoint()));
 
         //oauth2Login
         http
-                .oauth2Login(oauth-> oauth
+                .oauth2Login(oauth -> oauth
                         .loginPage("/auth/oauth")
-                        .userInfoEndpoint(info->info
+                        .userInfoEndpoint(info -> info
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2AuthenticationSuccessHandler));
         http
-                .logout(logout->logout
+                .logout(logout -> logout
                         .clearAuthentication(true));
+
+        http.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class);
+
         return http.build();
     }
+
 }
