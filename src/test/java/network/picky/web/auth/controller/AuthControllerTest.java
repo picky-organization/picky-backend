@@ -20,53 +20,46 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @Import({AuthController.class})
 @WebMvcTest(controllers = AuthController.class, useDefaultFilters = false)
 class AuthControllerTest {
-        @Autowired
-        private MockMvc mvc;
+    @Autowired
+    private MockMvc mvc;
 
-        @Autowired
-        private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
-        @MockBean
-        private SavedTokenRepository refreshTokenRepository;
+    @MockBean
+    private SavedTokenRepository refreshTokenRepository;
 
-        @TestConfiguration
-        static class AdditionalConfig {
-            @Bean
-            public JwtTokenProvider jwtTokenProvider() {
-                return new JwtTokenProvider("k3@6b^kll7zd($@=la0_$7tiu+8kfl@gc4zabflp-0_k*!#3y", 100000, 100000);
-            }
-        }
+    @Test
+    @DisplayName("정상작동시")
+    @WithMockUser
+    public void testRefresh() throws Exception {
+        // given
+        String path = "/auth/refresh";
 
-        @Test
-        @DisplayName("정상작동시")
-        @WithMockUser
-        public void testRefresh() throws Exception {
-            // given
-            String path = "/auth/refresh";
+        Long id = 1L;
+        AuthUser authUser = new AuthUser(id, Role.USER);
+        String refreshToken = jwtTokenProvider.createRefreshToken(authUser);
 
-            Long id = 1L;
-            AuthUser authUser = new AuthUser(id, Role.USER);
-            String refreshToken = jwtTokenProvider.createRefreshToken(authUser);
+        Mockito.when(refreshTokenRepository.findByRefreshToken(refreshToken)).thenReturn(new SavedToken(new Member(id), refreshToken));
+        Cookie cookie = new Cookie("refresh_token", refreshToken);
+        // when
+        ResultActions ra = mvc.perform(get(path).cookie(cookie));
 
-            Mockito.when(refreshTokenRepository.findByRefreshToken(refreshToken)).thenReturn(new SavedToken(new Member(id), refreshToken));
-            Cookie cookie = new Cookie("refresh_token", refreshToken);
-            // when
-            ResultActions ra = mvc.perform(get(path).cookie(cookie));
-
-            // then
-            ra.andExpect(status().isCreated());
-            ra.andDo(result -> {
-                String s = result.getResponse().getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
-                assert jwtTokenProvider.validToken(s);
-            });
-        }
+        // then
+        ra.andExpect(status().isCreated());
+        ra.andDo(result -> {
+            String s = result.getResponse().getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+            assert jwtTokenProvider.validToken(s);
+        });
+    }
 
     @Test
     @DisplayName("cookie가 없을때")
@@ -94,6 +87,14 @@ class AuthControllerTest {
 
         // then
         ra.andExpect(status().isBadRequest());
+    }
+
+    @TestConfiguration
+    static class AdditionalConfig {
+        @Bean
+        public JwtTokenProvider jwtTokenProvider() {
+            return new JwtTokenProvider("k3@6b^kll7zd($@=la0_$7tiu+8kfl@gc4zabflp-0_k*!#3y", 100000, 100000);
+        }
     }
 
 

@@ -7,27 +7,29 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 import java.util.Collections;
 
-public class JwtAuthenticationToken  extends AbstractAuthenticationToken  {
+public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private Long id;
     private String token;
 
-    public JwtAuthenticationToken(String token){
+    public JwtAuthenticationToken(String token) {
         super(Collections.emptyList());
         this.token = token;
     }
 
-    public JwtAuthenticationToken(Long id, String token, Collection<? extends GrantedAuthority> authorities){
+    public JwtAuthenticationToken(Long id, String token, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.id = id;
         this.token = token;
     }
 
 
-    public static Authentication unauthenticated(String token){
-        return new JwtAuthenticationToken(token);
+    public static Authentication unauthenticated(String token) {
+        Authentication authentication = new JwtAuthenticationToken(token);
+        authentication.setAuthenticated(false);
+        return authentication;
     }
 
-    public static Authentication authenticated(Long id, String token, Collection<? extends GrantedAuthority> authorities){
+    public static Authentication authenticated(Long id, String token, Collection<? extends GrantedAuthority> authorities) {
         Authentication result = new JwtAuthenticationToken(id, token, authorities);
         result.setAuthenticated(true);
         return result;
@@ -43,7 +45,7 @@ public class JwtAuthenticationToken  extends AbstractAuthenticationToken  {
         return token;
     }
 
-    public String getToken(){
+    public String getToken() {
         return token;
     }
 

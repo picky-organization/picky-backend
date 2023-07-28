@@ -6,15 +6,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JwtTokenProviderTest {
 
     JwtTokenProvider jwtTokenProvider;
 
     @BeforeEach
-    public void setup(){
-        String secretKey ="&3YZpPi--/#R}e?~35$gw8&TW'?KM2Kj_ql5RXY2Xq!M'j58bFgY$iO_|0Uoek2";
+    public void setup() {
+        String secretKey = "&3YZpPi--/#R}e?~35$gw8&TW'?KM2Kj_ql5RXY2Xq!M'j58bFgY$iO_|0Uoek2";
         int accessTokenExpired = 1000 * 60 * 60 * 2;
         int refreshTokenExpired = 1000 * 60 * 60 * 2;
 
@@ -44,7 +45,7 @@ class JwtTokenProviderTest {
 
         //when
         String token = this.jwtTokenProvider.createAccessToken(authUser);
-        AuthUser authUserParse=this.jwtTokenProvider.getParseClaims(token);
+        AuthUser authUserParse = this.jwtTokenProvider.getParseClaims(token);
 
         //then
         assertEquals(authUser, authUserParse);
@@ -74,7 +75,7 @@ class JwtTokenProviderTest {
 
         //when
         String token = this.jwtTokenProvider.createRefreshToken(authUser);
-        AuthUser authUserParse=this.jwtTokenProvider.getParseClaims(token);
+        AuthUser authUserParse = this.jwtTokenProvider.getParseClaims(token);
 
         //then
         assertEquals(authUser, authUserParse);
