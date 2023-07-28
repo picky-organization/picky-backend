@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/category").permitAll()
+                        .requestMatchers("/tech").permitAll()
                         .anyRequest().authenticated()
                 .exceptionHandling(handle -> handle.authenticationEntryPoint(new BasicAuthenticationEntryPoint()));
 
