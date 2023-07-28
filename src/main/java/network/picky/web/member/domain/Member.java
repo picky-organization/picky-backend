@@ -29,7 +29,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = true, length=200)
+    @Column(nullable = true, length = 200)
     private String introduce;
 
     @Column(nullable = true, length = 20)
@@ -55,7 +55,7 @@ public class Member extends BaseEntity {
 
     private int projectCount = 0;
 
-    private int projectCommentCount  = 0;
+    private int projectCommentCount = 0;
 
     @Builder
     public Member(String email, String oauth2Id, String picture, String name, String introduce, String field, String github, String facebook, String instagram, boolean commentNotice, AuthProvider authProvider, Role role, int projectCount, int projectCommentCount) {
@@ -75,7 +75,7 @@ public class Member extends BaseEntity {
         this.projectCommentCount = projectCommentCount;
     }
 
-    public Member(Long id){
+    public Member(Long id) {
         this.id = id;
     }
 
