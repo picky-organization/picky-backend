@@ -7,12 +7,9 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class AuthConfig implements WebMvcConfigurer {
     @Bean
-    public ProviderManager providerManager(JwtAuthenticationProvider provider){
+    public ProviderManager providerManager(JwtAuthenticationProvider provider) {
         return new ProviderManager(provider);
     }
-
-
-
 }
