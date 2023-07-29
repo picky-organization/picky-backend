@@ -13,12 +13,12 @@ import java.util.Set;
 public class RoleGrant implements GrantedAuthority {
     private final Role role;
 
+    public static Set<RoleGrant> createSingleGrant(Role role) {
+        return Collections.singleton(new RoleGrant(role));
+    }
+
     @Override
     public String getAuthority() {
         return role.getKey();
-    }
-
-    public static Set<RoleGrant> createSingleGrant(Role role){
-        return Collections.singleton(new RoleGrant(role));
     }
 }

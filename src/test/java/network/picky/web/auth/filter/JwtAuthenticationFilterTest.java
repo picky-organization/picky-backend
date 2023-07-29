@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import network.picky.web.auth.dto.JwtAuthenticationToken;
 import network.picky.web.auth.exception.TokenAuthenticationException;
 import network.picky.web.auth.exception.TokenInvalidException;
-import network.picky.web.auth.exception.TokenParsingException;
 import network.picky.web.auth.token.BearerTokenResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,14 +15,14 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.io.IOException;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class JwtAuthenticationFilterTest {
@@ -41,7 +40,7 @@ class JwtAuthenticationFilterTest {
         BearerTokenResolver bearerTokenResolver = Mockito.mock();
         Mockito.when(bearerTokenResolver.resolve(Mockito.any())).thenReturn(this.TOKEN);
 
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(providerManager,bearerTokenResolver);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(providerManager, bearerTokenResolver);
 
         HttpServletRequest request = Mockito.mock();
         HttpServletResponse response = Mockito.mock();
@@ -49,7 +48,7 @@ class JwtAuthenticationFilterTest {
 
         //when
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
-        JwtAuthenticationToken auth = (JwtAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+        JwtAuthenticationToken auth = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
         //then
         assertEquals(auth.getToken(), TOKEN);
@@ -61,7 +60,7 @@ class JwtAuthenticationFilterTest {
         //given
         ProviderManager providerManager = Mockito.mock();
         BearerTokenResolver bearerTokenResolver = Mockito.mock();
-            Mockito.doThrow(TokenInvalidException.class).when(bearerTokenResolver).resolve(Mockito.any());
+        Mockito.doThrow(TokenInvalidException.class).when(bearerTokenResolver).resolve(Mockito.any());
 
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(providerManager, bearerTokenResolver);
 

@@ -11,10 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class TokenResolverTest {
     @Mock
@@ -22,13 +20,13 @@ class TokenResolverTest {
     BearerTokenResolver bearerTokenResolver;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         bearerTokenResolver = new BearerTokenResolver();
     }
 
     @Test
     @DisplayName("Authorization Header가 없는 경우")
-    public void testResolveNotExistsAuthorizationHeader(){
+    public void testResolveNotExistsAuthorizationHeader() {
         //given
         Mockito.when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("");
 
@@ -36,13 +34,14 @@ class TokenResolverTest {
         assertThrows(TokenInvalidException.class, () ->
                 bearerTokenResolver.resolve(request));
     }
+
     @Test
     @DisplayName("Authroization Header가 Bearer가 아닌 경우")
-    public void testResolveAuthorizationHeaderNotBearer(){
+    public void testResolveAuthorizationHeaderNotBearer() {
         //given
         String token = "secret";
         String tokenPrefix = "Token";
-        String header = tokenPrefix+" "+token;
+        String header = tokenPrefix + " " + token;
         Mockito.when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(header);
 
         //then.when
@@ -52,11 +51,11 @@ class TokenResolverTest {
 
     @Test
     @DisplayName("헤더사이에 스페이스가 없는 경우")
-    public void testResolveHeaderNoSpace(){
+    public void testResolveHeaderNoSpace() {
         //given
         String token = "secret";
         String tokenHeader = "Bearer";
-        String header = tokenHeader+token;
+        String header = tokenHeader + token;
         Mockito.when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(header);
 
         //then

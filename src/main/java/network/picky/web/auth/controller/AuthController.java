@@ -26,11 +26,11 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenManager;
 
     @GetMapping("refresh")
-    public ResponseEntity<Void> refresh(@CookieValue(value="refresh_token") String refreshToken){
-        if(StringUtils.hasText(refreshToken) && jwtTokenManager.validToken(refreshToken)) {
+    public ResponseEntity<Void> refresh(@CookieValue(value = "refresh_token") String refreshToken) {
+        if (StringUtils.hasText(refreshToken) && jwtTokenManager.validToken(refreshToken)) {
             try {
                 refreshTokenRepository.findByRefreshToken(refreshToken);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.badRequest().build();
             }
@@ -43,8 +43,8 @@ public class AuthController {
     }
 
     @GetMapping("oauth")
-    public ResponseEntity oauth(){
-        Map<String,String> loginPathMap = new HashMap<>();
+    public ResponseEntity oauth() {
+        Map<String, String> loginPathMap = new HashMap<>();
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/oauth2/authorization/google").build().toUri();
         loginPathMap.put("google", uri.toString());
         return ResponseEntity.ok().body(loginPathMap);

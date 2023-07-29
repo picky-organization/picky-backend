@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JwtAuthenticationTokenTest {
     String token = "TOKEN";
+
     @Test
     void unauthenticated() {
         Authentication authToken = JwtAuthenticationToken.unauthenticated(token);
