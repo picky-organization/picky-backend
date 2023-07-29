@@ -23,6 +23,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private final MemberRepository memberRepository;
 
+    // AccessToken을 통해 회원 정보를 가져옴
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();

@@ -3,6 +3,7 @@ package network.picky.web.config;
 import lombok.RequiredArgsConstructor;
 import network.picky.web.auth.OAuth2AuthenticationFailureHandler;
 import network.picky.web.auth.OAuth2AuthenticationSuccessHandler;
+import network.picky.web.auth.filter.JwtAuthenticationFilter;
 import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 @Configuration
@@ -22,6 +24,7 @@ public class SecurityConfig {
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
     @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,19 +41,29 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
-                )
-                .exceptionHandling(handle->handle.authenticationEntryPoint(new BasicAuthenticationEntryPoint()));
+                );
 
         //oauth2Login
         http
-                .oauth2Login(oauth-> oauth
-                        .loginPage("/auth/oauth")
-                        .userInfoEndpoint(info->info
+                .oauth2Login(oauth -> oauth
+                        .authorizationEndpoint(endpoint->endpoint
+                                .baseUri("/oauth2/authorize")
+                                .authorizationRequestRepository(cookieAuthorizationRequestRepository))
+                        .redirectionEndpoint(redirection -> redirection
+                                .baseUri("/*/oauth2/code/*"))
+                        .userInfoEndpoint(info -> info
                                 .userService(customOAuth2UserService))
-                        .successHandler(oAuth2AuthenticationSuccessHandler));
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler));
+
         http
                 .logout(logout->logout
                         .clearAuthentication(true));
+
+        http
+                // form.disable()를 통해 UsernamePasswordAuthenticationFilter가 실행되지 않는다.
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
