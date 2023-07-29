@@ -1,7 +1,7 @@
 package network.picky.web.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import network.picky.web.auth.OAuth2UserInfoFactory;
+import network.picky.web.auth.dto.OAuth2UserInfoFactory;
 import network.picky.web.auth.UserPrincipal;
 import network.picky.web.auth.dto.OAuth2UserInfo;
 import network.picky.web.auth.enums.AuthProvider;
@@ -23,6 +23,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private final MemberRepository memberRepository;
 
+    // AccessToken을 통해 회원 정보를 가져옴
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
@@ -52,7 +53,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         else {
             member = registerMember(authProvider, oAuth2UserInfo);
         }
-
+//        DefaultOAuth2User defaultOAuth2User = new DefaultOAuth2User(RoleGrant.createSingleGrant(Role.USER), oAuth2User.getAttributes(), );
         return UserPrincipal.create(member, oAuth2UserInfo.getAttributes());
     }
 

@@ -60,45 +60,5 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.setStatus(HttpServletResponse.SC_OK);
         log.info(refreshToken);
     }
-//    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-//        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-//                .map(Cookie::getValue);
-//
-//        if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-//            throw new RuntimeException("redirect URIs are not matched.");
-//        }
-//        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-//
-//        UserPrincipal userPrincipal = (UserPrincipal) authentication;
-//        String authority = userPrincipal.getAuthorities().get(0).getAuthority();
-//        Role role = Role.valueOf(authority);
-//        AuthUser authUser = new AuthUser(userPrincipal.getId(), role);
-//        //JWT 생성
-//        String accessToken = jwtTokenProvider.createAccessToken(authUser);
-//        String refreshToken = jwtTokenProvider.createRefreshToken(authUser);
-//        Cookie refreshCookie = new Cookie("refresh_token", refreshToken);
-//        refreshCookie.setHttpOnly(true);
-//        response.addCookie(refreshCookie);
-//
-//        return UriComponentsBuilder.fromUriString(targetUrl)
-//                .queryParam("token", tokenInfo.getAccessToken())
-//                .build().toUriString();
-//    }
-//
-//    protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
-//        super.clearAuthenticationAttributes(request);
-//        cookieAuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
-//    }
-//
-//    private boolean isAuthorizedRedirectUri(String uri) {
-//        URI clientRedirectUri = URI.create(uri);
-//        URI authorizedUri = URI.create(redirectUri);
-//
-//        if (authorizedUri.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-//                && authorizedUri.getPort() == clientRedirectUri.getPort()) {
-//            return true;
-//        }
-//        return false;
-//    }
 
 }
