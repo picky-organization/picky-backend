@@ -15,26 +15,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 
-
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JwtAuthenticationProviderTest {
     public JwtTokenProvider jwtTokenProvider;
     public String token;
-    AuthUser authUser;
     public JwtAuthenticationProvider jwtAuthenticationProvider;
-    public String secretKey ="&3YZpPi--/#R}e?~35$gw8&TW'?KM2Kj_ql5RXY2Xq!M'j58bFgY$iO_|0Uoek2";
+    public String secretKey = "&3YZpPi--/#R}e?~35$gw8&TW'?KM2Kj_ql5RXY2Xq!M'j58bFgY$iO_|0Uoek2";
     public int accessTokenExpired = 1000 * 60 * 60 * 2;
     public int refreshTokenExpired = 1000 * 60 * 60 * 2;
+    AuthUser authUser;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         this.jwtTokenProvider = new JwtTokenProvider(secretKey, accessTokenExpired, refreshTokenExpired);
         this.jwtAuthenticationProvider = new JwtAuthenticationProvider(jwtTokenProvider);
         Long id = 1L;
@@ -42,6 +42,7 @@ class JwtAuthenticationProviderTest {
         authUser = new AuthUser(id, role);
         this.token = jwtTokenProvider.createAccessToken(authUser);
     }
+
     @Test
     @DisplayName("authenticate 정상 작동 테스트")
     void authenticate() {
@@ -50,7 +51,7 @@ class JwtAuthenticationProviderTest {
         Authentication expect = JwtAuthenticationToken.authenticated(authUser.getId(), token, RoleGrant.createSingleGrant(authUser.getRole()));
 
         //when
-        Authentication actual =  jwtAuthenticationProvider.authenticate(authentication);
+        Authentication actual = jwtAuthenticationProvider.authenticate(authentication);
 
         //then
         assertEquals(expect, actual);
@@ -65,7 +66,7 @@ class JwtAuthenticationProviderTest {
         Authentication authentication = new JwtAuthenticationToken(strangeToken);
 
         //when.then
-        assertThrows(TokenAuthenticationException.class, ()->jwtAuthenticationProvider.authenticate(authentication));
+        assertThrows(TokenAuthenticationException.class, () -> jwtAuthenticationProvider.authenticate(authentication));
     }
 
     @Test
@@ -115,7 +116,7 @@ class JwtAuthenticationProviderTest {
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         Key key = Keys.hmacShaKeyFor(keyBytes);
 
-        String token =  Jwts.builder()
+        String token = Jwts.builder()
                 .setIssuedAt(now)
                 .addClaims(claim)
                 .setExpiration(expiration)
@@ -124,13 +125,13 @@ class JwtAuthenticationProviderTest {
         Authentication authentication = JwtAuthenticationToken.unauthenticated(token);
 
         //when.then
-        TokenAuthenticationException a = assertThrows(TokenAuthenticationException.class, ()->jwtAuthenticationProvider.authenticate(authentication));
+        TokenAuthenticationException a = assertThrows(TokenAuthenticationException.class, () -> jwtAuthenticationProvider.authenticate(authentication));
         assertEquals(a.getCause().getClass(), TokenParsingException.class);
     }
 
     @Test
     @DisplayName("authenticate token이 만료될 경우")
-    void authenticateExpiredToken(){
+    void authenticateExpiredToken() {
         //given
         int zeroExpired = 0;
         this.jwtTokenProvider = new JwtTokenProvider(secretKey, zeroExpired, refreshTokenExpired);
@@ -139,7 +140,7 @@ class JwtAuthenticationProviderTest {
         Authentication authentication = JwtAuthenticationToken.unauthenticated(token);
 
         //when.then
-        TokenAuthenticationException a = assertThrows(TokenAuthenticationException.class, ()->jwtAuthenticationProvider.authenticate(authentication));
+        TokenAuthenticationException a = assertThrows(TokenAuthenticationException.class, () -> jwtAuthenticationProvider.authenticate(authentication));
         assertEquals(a.getCause().getClass(), TokenInvalidException.class);
     }
 }

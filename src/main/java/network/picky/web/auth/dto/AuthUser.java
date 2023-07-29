@@ -8,7 +8,7 @@ import network.picky.web.member.enums.Role;
 @Getter
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class AuthUser{
+public class AuthUser {
     private final Long id;
     private final Role role;
 }

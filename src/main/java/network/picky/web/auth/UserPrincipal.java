@@ -18,6 +18,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private final Long id;
     private final String email;
     private final List<? extends GrantedAuthority> authorities;
+    @Setter
+    private Map<String, Object> attributes;
 
     public UserPrincipal(Long id, String email, List<? extends GrantedAuthority> authorities, Map<String, Object> attributes) {
         this.id = id;
@@ -25,9 +27,6 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.authorities = authorities;
         this.attributes = attributes;
     }
-
-    @Setter
-    private Map<String, Object> attributes;
 
     public UserPrincipal(Long id, String email, List<? extends GrantedAuthority> authorities) {
         this.id = id;
