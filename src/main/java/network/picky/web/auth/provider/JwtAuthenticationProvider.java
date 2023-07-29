@@ -9,7 +9,6 @@ import network.picky.web.auth.exception.TokenAuthenticationException;
 import network.picky.web.auth.exception.TokenInvalidException;
 import network.picky.web.auth.exception.TokenParsingException;
 import network.picky.web.auth.token.JwtTokenProvider;
-import org.h2.command.Token;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -20,15 +19,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final JwtTokenProvider jwtTokenProvider;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        JwtAuthenticationToken jwtAuthenticationToken =(JwtAuthenticationToken) authentication;
+        JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
         String token = jwtAuthenticationToken.getToken();
-        if(jwtTokenProvider.validToken(token)){
+        if (jwtTokenProvider.validToken(token)) {
             try {
                 AuthUser authUser = jwtTokenProvider.getParseClaims(token);
                 return JwtAuthenticationToken.authenticated(authUser.getId(), token, RoleGrant.createSingleGrant(authUser.getRole()));
-            }catch (TokenParsingException cause){
+            } catch (TokenParsingException cause) {
                 TokenAuthenticationException ex = new TokenAuthenticationException();
                 ex.initCause(cause);
                 throw ex;
@@ -41,6 +41,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-            return JwtAuthenticationToken.class.isAssignableFrom(authentication);
+        return JwtAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

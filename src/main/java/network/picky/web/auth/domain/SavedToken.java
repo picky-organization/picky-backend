@@ -16,7 +16,7 @@ public class SavedToken {
     @ManyToOne
     private Member member;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String refreshToken;
 
     public SavedToken(Member member, String refreshToken) {
