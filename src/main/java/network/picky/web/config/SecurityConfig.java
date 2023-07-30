@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/category").permitAll()
                         .requestMatchers("/tech").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated())
                 .exceptionHandling(handle -> handle.authenticationEntryPoint(new BasicAuthenticationEntryPoint()));
 
         //oauth2Login
