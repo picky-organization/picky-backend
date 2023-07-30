@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import network.picky.web.category.domain.Category;
+import network.picky.web.project.domain.ProjectCategory;
 
 @Getter
 @Builder
@@ -21,4 +23,14 @@ public class CategoryResponseDto {
     @NotBlank
     @Size(max = 20)
     private String name;
+
+    public CategoryResponseDto(Category category){
+        this.id = category.getId();
+        this.name = category.getName();
+    }
+
+    public CategoryResponseDto(ProjectCategory projectCategory) {
+        this.id = projectCategory.getCategory().getId();
+        this.name = projectCategory.getCategory().getName();
+    }
 }

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import network.picky.web.project.domain.ProjectTech;
 
 @Getter
 @Builder
@@ -21,4 +22,9 @@ public class TechResponseDto {
     @NotBlank
     @Size(max = 20)
     private String name;
+
+    public TechResponseDto(ProjectTech projectTech) {
+        this.id = projectTech.getTech().getId();
+        this.name = projectTech.getTech().getName();
+    }
 }
