@@ -44,13 +44,14 @@ public class Member extends BaseEntity {
     @Column(nullable = true, length = 2083)
     private String instagram;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private boolean commentNotice = true;
 
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     private int projectCount = 0;
@@ -82,8 +83,13 @@ public class Member extends BaseEntity {
     public Member update(OAuth2UserInfo oAuth2UserInfo) {
         this.name = oAuth2UserInfo.getName();
         this.oauth2Id = oAuth2UserInfo.getOAuth2Id();
-
         return this;
     }
 
+    public void increaseProjectCount(){
+        this.projectCount++;
+    }
+    public void decreaseProjectCount(){
+        this.projectCount--;
+    }
 }
