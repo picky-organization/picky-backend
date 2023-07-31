@@ -45,8 +45,10 @@ public class AuthController {
     @GetMapping("oauth")
     public ResponseEntity oauth() {
         Map<String, String> loginPathMap = new HashMap<>();
-        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/oauth2/authorization/google").build().toUri();
-        loginPathMap.put("google", uri.toString());
+        URI googleUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/oauth2/authorization/google").build().toUri();
+        URI githubUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/oauth2/authorization/github").build().toUri();
+        loginPathMap.put("google", googleUri.toString());
+        loginPathMap.put("github", githubUri.toString());
         return ResponseEntity.ok().body(loginPathMap);
     }
 }
