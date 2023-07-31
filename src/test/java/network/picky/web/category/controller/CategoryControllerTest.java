@@ -6,23 +6,25 @@ import network.picky.web.category.dto.CategoryDeleteAllRequestDto;
 import network.picky.web.category.dto.CategoryResponseDto;
 import network.picky.web.category.dto.CategorySaveRequestDto;
 import network.picky.web.category.service.CategoryService;
+import network.picky.web.common.error.GlobalExceptionHandler;
+import network.picky.web.config.TestConfig;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -30,15 +32,14 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
-@Import(CategoryController.class)
-@WebMvcTest(controllers = CategoryController.class, useDefaultFilters = false)
+@Import({CategoryController.class, TestConfig.class, GlobalExceptionHandler.class})
+@WebMvcTest(useDefaultFilters = false)
 class CategoryControllerTest {
-//    Logger log = LoggerFactory.getLogger(CategoryControllerTest.class);
-
     @Autowired
     MockMvc mvc;
 
@@ -47,20 +48,10 @@ class CategoryControllerTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @TestConfiguration
-    static class DefaultConfigWithoutCsrf{
-
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http.csrf(csrf->csrf.disable());
-            return http.build();
-        }
-    }
-
     @WithMockUser
-    @DisplayName("get-all : 정상")
+    @DisplayName("getAll : 정상")
     @Test
-    void getAll() throws Exception {
+    void getAllTest() throws Exception {
         String path = "/category";
         Stream<Long> ids = LongStream.range(1, 5).boxed();
         List<CategoryResponseDto> categories = ids.map(n -> new CategoryResponseDto(n, "category" + n)).collect(Collectors.toList());
@@ -74,12 +65,10 @@ class CategoryControllerTest {
         //then
         ra.andExpect(status().isOk())
                 .andExpect(content().json(result));
-//                .andExpect(jsonPath("$", Matchers.hasSize(4)))
-//                .andExpect(jsonPath("$[0].id").value(categories.get(0).getId()))
-//                .andExpect(jsonPath("$[0].name").value(categories.get(0).getName()));
     }
+
     @WithMockUser
-    @DisplayName("get-all : 결과가 비어 있을때")
+    @DisplayName("getAll : empty")
     @Test
     void getAllTestResultEmpty() throws Exception {
         String path = "/category";
@@ -96,7 +85,7 @@ class CategoryControllerTest {
     @WithMockUser
     @DisplayName("deleteAllByRequest : 정상")
     @Test
-    void deleteAllByRequest() throws Exception {
+    void deleteAllByRequestTest() throws Exception {
         // given
         String path = "/admin/category";
         List<Long> ids = new ArrayList<>();
@@ -116,7 +105,7 @@ class CategoryControllerTest {
     @WithMockUser
     @DisplayName("deleteAllByRequest : ids가 빈 값일때")
     @Test
-    void deleteAllByRequestTestRequestIdsIsZero() throws Exception {
+    void deleteAllByRequestTestRequestIdsIsNull() throws Exception {
         // given
         String path = "/admin/category";
         CategoryDeleteAllRequestDto categoryDeleteAllRequestDto = new CategoryDeleteAllRequestDto(Collections.emptyList());
@@ -128,31 +117,14 @@ class CategoryControllerTest {
                 .content(content));
 
         //then
-        ra.andExpect(status().isBadRequest());
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
     }
 
     @WithMockUser
-    @DisplayName("deleteAllByRequest : request가 없을때")
+    @DisplayName("deleteAllByRequest : empty request")
     @Test
-    void deleteAllByRequestTestRequestIsNull() throws Exception {
-        // given
-        String path = "/admin/category";
-        CategorySaveRequestDto categorySaveRequestDto = new CategorySaveRequestDto("hi");
-        String content = objectMapper.writeValueAsString(categorySaveRequestDto);
-
-        //when
-        ResultActions ra = mvc.perform(delete(path)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content));
-
-        //then
-        ra.andExpect(status().isBadRequest());
-    }
-
-    @WithMockUser
-    @DisplayName("deleteAllByRequest : request 형식이 맞지않을때")
-    @Test
-    void deleteAllByRequestTestRequestFrom() throws Exception {
+    void deleteAllByRequestTestEmptyRequest() throws Exception {
         // given
         String path = "/admin/category";
 
@@ -160,7 +132,27 @@ class CategoryControllerTest {
         ResultActions ra = mvc.perform(delete(path));
 
         //then
-        ra.andExpect(status().isBadRequest());
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof HttpMessageNotReadableException));
+    }
+
+    @WithMockUser
+    @DisplayName("deleteAllByRequest : invalid request")
+    @Test
+    void deleteAllByRequestTestInvalidRequest() throws Exception {
+        // given
+        String path = "/admin/category";
+
+        Map<String, String> request = new HashMap<>();
+
+        //when
+        ResultActions ra = mvc.perform(delete(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        //then
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
     }
 
     @WithMockUser
@@ -182,25 +174,26 @@ class CategoryControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("post : request가 없을때")
+    @DisplayName("post : empty request")
     @Test
-    void postTestRequestIsNull() throws Exception {
+    void postTestEmptyRequest() throws Exception {
         String path = "/admin/category";
 
         //when
         ResultActions ra = mvc.perform(post(path));
 
         //then
-        ra.andExpect(status().isBadRequest());
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof HttpMessageNotReadableException));
     }
 
     @WithMockUser
-    @DisplayName("post : request 형식이 맞지 않을 때")
+    @DisplayName("post : invalid request")
     @Test
-    void postTestRequestForm() throws Exception {
+    void postTestInvalidRequest() throws Exception {
         String path = "/admin/category";
-        Map<String,String> request = new HashMap<>();
-        request.put("test", "map");
+
+        Map<String, String> request = new HashMap<>();
 
         //when
         ResultActions ra = mvc.perform(post(path)
@@ -208,15 +201,16 @@ class CategoryControllerTest {
                 .content(objectMapper.writeValueAsString(request)));
 
         //then
-        ra.andExpect(status().isBadRequest());
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
     }
 
     @WithMockUser
-    @DisplayName("update : 정상")
+    @DisplayName("put : 정상")
     @Test
-    void updateTest() throws Exception {
+    void putTest() throws Exception {
         Long id = 1L;
-        String path = "/admin/category/"+id;
+        String path = "/admin/category/" + id;
         final String newCategoryName = "new_category";
         CategorySaveRequestDto categorySaveRequestDto = new CategorySaveRequestDto(newCategoryName);
 
@@ -235,11 +229,46 @@ class CategoryControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("update : 잘못된 id 일때")
+    @DisplayName("put : empty request")
     @Test
-    void updateTestIdNotFound() throws Exception {
+    void putTestEmptyRequest() throws Exception {
+        Long id = 1L;
+        String path = "/admin/category/" + id;
+
+        //when
+        ResultActions ra = mvc.perform(put(path));
+
+        //then
+        ra
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof HttpMessageNotReadableException))
+                .andExpect(status().isBadRequest());
+    }
+
+    @WithMockUser
+    @DisplayName("put : invalid request")
+    @Test
+    void putTestInvalidRequest() throws Exception {
+        Long id = 1L;
+        String path = "/admin/category/" + id;
+
+        Map<String, String> request = new HashMap<>();
+
+        //when
+        ResultActions ra = mvc.perform(put(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        //then
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
+    }
+
+    @WithMockUser
+    @DisplayName("put : 잘못된 id 일때")
+    @Test
+    void putTestWrongId() throws Exception {
         String id = "wrongId";
-        String path = "/admin/category/"+id;
+        String path = "/admin/category/" + id;
         final String newCategoryName = "new_category";
         CategorySaveRequestDto categorySaveRequestDto = new CategorySaveRequestDto(newCategoryName);
 
@@ -249,39 +278,25 @@ class CategoryControllerTest {
                 .content(objectMapper.writeValueAsString(categorySaveRequestDto)));
 
         //then
-        ra.andExpect(status().isBadRequest());
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentTypeMismatchException));
     }
 
     @WithMockUser
-    @DisplayName("update : request가 없을때")
+    @DisplayName("put : 초과한 id 일때")
     @Test
-    void updateTestRequestNotExists() throws Exception {
-        String id = "wrongId";
-        String path = "/admin/category/"+id;
+    void putTestIdTooLong() throws Exception {
+        //given
+        String path = "/admin/category/" + Long.MAX_VALUE + 1;
 
         //when
         ResultActions ra = mvc.perform(put(path));
 
         //then
-        ra.andExpect(status().isBadRequest());
-    }
-
-    @WithMockUser
-    @DisplayName("update : request가 안 맞을 때")
-    @Test
-    void updateTestRequestWrong() throws Exception {
-        Long id = 1L;
-        String path = "/admin/category/" + id;
-        Map<String,String> request = new HashMap<>();
-        request.put("test", "map");
-
-        //when
-        ResultActions ra = mvc.perform(put(path)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
-
-        //then
-        ra.andExpect(status().isBadRequest());
+        ra
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentTypeMismatchException))
+                .andExpect(status().isBadRequest());
     }
 
     @WithMockUser
@@ -303,13 +318,15 @@ class CategoryControllerTest {
     @Test
     void deleteTestIdWrong() throws Exception {
         String id = "1L";
-        String path = "/admin/category/"+id;
+        String path = "/admin/category/" + id;
 
         //when
         ResultActions ra = mvc.perform(delete(path));
 
         //then
-        ra.andExpect(status().isBadRequest());
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentTypeMismatchException))
+        ;
     }
 
     @WithMockUser
@@ -317,13 +334,14 @@ class CategoryControllerTest {
     @Test
     void deleteTestIdTooLong() throws Exception {
         BigInteger bigInteger = new BigInteger("19223372036854775807");
-        String path = "/admin/category/"+bigInteger;
+        String path = "/admin/category/" + bigInteger;
 
         //when
         ResultActions ra = mvc.perform(delete(path));
 
         //then
-        ra.andExpect(status().isBadRequest());
+        ra.andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentTypeMismatchException));
     }
 
 }
