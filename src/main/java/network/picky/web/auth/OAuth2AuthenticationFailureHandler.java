@@ -1,19 +1,22 @@
 package network.picky.web.auth;
 
-import jakarta.servlet.http.Cookie;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import network.picky.web.auth.lib.CookieUtils;
 import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
+import network.picky.web.common.error.ErrorResponse;
+import network.picky.web.common.exception.BaseHttpStatusException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-
-import static network.picky.web.auth.repository.CookieAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
 @RequiredArgsConstructor
@@ -23,16 +26,24 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException {
-        String targetUrl = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue)
-                .orElse("/");
-
-        targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("error", authenticationException.getLocalizedMessage())
-                .build().toUriString();
-
         cookieAuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
+        BaseHttpStatusException cause = (BaseHttpStatusException)authenticationException.getCause();
+        String message = authenticationException.getMessage();
+        String currentPath = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
+        ObjectWriter objectWriter = new ObjectMapper().registerModule(new JavaTimeModule()).writer().withDefaultPrettyPrinter();
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .path(currentPath)
+                .status(cause.getStatus())
+                .statusName(cause.getStatusName())
+                .message(message)
+                .build();
+        String json = objectWriter.writeValueAsString(errorResponse);
+
+        response.setHeader("Content-Type", "application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_CONFLICT);
+        response.getWriter().write(json);
     }
+
 
 }
