@@ -414,7 +414,7 @@ class ProjectControllerTest {
                 .email("email")
                 .name("name")
                 .picture("picture")
-                .oauth2Id("google")
+                .socialType("google")
                 .role(Role.USER)
                 .build());
         Mockito.when(member.getId()).thenReturn(memberId);

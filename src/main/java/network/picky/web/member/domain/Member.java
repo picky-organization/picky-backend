@@ -21,7 +21,7 @@ public class Member extends BaseEntity {
     private String email;
 
     @Column(nullable = false, length = 50)
-    private String oauth2Id;
+    private String socialType;
 
     @Column(nullable = false, length = 2083)
     private String picture;
@@ -59,9 +59,9 @@ public class Member extends BaseEntity {
     private int projectCommentCount = 0;
 
     @Builder
-    public Member(String email, String oauth2Id, String picture, String name, String introduce, String field, String github, String facebook, String instagram, boolean commentNotice, AuthProvider authProvider, Role role, int projectCount, int projectCommentCount) {
+    public Member(String email, String socialType, String picture, String name, String introduce, String field, String github, String facebook, String instagram, boolean commentNotice, AuthProvider authProvider, Role role, int projectCount, int projectCommentCount) {
         this.email = email;
-        this.oauth2Id = oauth2Id;
+        this.socialType = socialType;
         this.picture = picture;
         this.name = name;
         this.introduce = introduce;
@@ -80,16 +80,11 @@ public class Member extends BaseEntity {
         this.id = id;
     }
 
-    public Member update(OAuth2UserInfo oAuth2UserInfo) {
-        this.name = oAuth2UserInfo.getName();
-        this.oauth2Id = oAuth2UserInfo.getOAuth2Id();
-        return this;
-    }
-
     public void increaseProjectCount(){
         this.projectCount++;
     }
     public void decreaseProjectCount(){
         this.projectCount--;
     }
+
 }
