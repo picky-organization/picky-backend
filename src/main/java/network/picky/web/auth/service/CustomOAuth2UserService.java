@@ -5,6 +5,10 @@ import network.picky.web.auth.dto.OAuth2UserInfoFactory;
 import network.picky.web.auth.UserPrincipal;
 import network.picky.web.auth.dto.OAuth2UserInfo;
 import network.picky.web.auth.enums.AuthProvider;
+import network.picky.web.auth.exception.AttributeNotFoundException;
+import network.picky.web.auth.exception.DuplicatedAuthenticationException;
+import network.picky.web.common.exception.BadRequestException;
+import network.picky.web.common.exception.ConflictException;
 import network.picky.web.member.domain.Member;
 import network.picky.web.member.enums.Role;
 import network.picky.web.member.repository.MemberRepository;
@@ -35,25 +39,26 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     protected OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         //OAuth2 로그인 플랫폼 구분
         AuthProvider authProvider = AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase());
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(authProvider, oAuth2User.getAttributes());
+        String accessToken = oAuth2UserRequest.getAccessToken().getTokenValue();
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(authProvider, oAuth2User.getAttributes(), accessToken);
 
         if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
-            throw new RuntimeException("Email not found from OAuth2 provider");
+            throw new AttributeNotFoundException("이메일을 가져올 수 없습니다.", new BadRequestException());
         }
 
         Member member = memberRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
         //이미 가입된 경우
         if (member != null) {
             if (!member.getAuthProvider().equals(authProvider)) {
-                throw new RuntimeException("Email already signed up.");
+//                throw new MemberExistsException("이미 가입된 이메일입니다. " , member.getSocialType());
+                throw new DuplicatedAuthenticationException(member.getSocialType() + "로 이미 회원가입이 되어있습니다.", new ConflictException());
             }
-            member = updateMember(member, oAuth2UserInfo);
         }
+
         //가입되지 않은 경우
         else {
             member = registerMember(authProvider, oAuth2UserInfo);
         }
-//        DefaultOAuth2User defaultOAuth2User = new DefaultOAuth2User(RoleGrant.createSingleGrant(Role.USER), oAuth2User.getAttributes(), );
         return UserPrincipal.create(member, oAuth2UserInfo.getAttributes());
     }
 
@@ -62,14 +67,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .email(oAuth2UserInfo.getEmail())
                 .name(oAuth2UserInfo.getName())
                 .picture(oAuth2UserInfo.getPicture())
-                .oauth2Id(oAuth2UserInfo.getOAuth2Id())
+                .socialType(authProvider.name())
                 .authProvider(authProvider)
                 .role(Role.USER)
                 .build();
+
         return memberRepository.save(member);
     }
 
-    private Member updateMember(Member member, OAuth2UserInfo oAuth2UserInfo) {
-        return memberRepository.save(member.update(oAuth2UserInfo));
-    }
 }

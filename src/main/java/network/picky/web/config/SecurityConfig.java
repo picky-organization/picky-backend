@@ -44,14 +44,15 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/category").permitAll()
                         .requestMatchers("/tech").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
                 .exceptionHandling(handle -> handle.authenticationEntryPoint(new BasicAuthenticationEntryPoint()));
 
         //oauth2Login
         http
                 .oauth2Login(oauth -> oauth
                         .authorizationEndpoint(endpoint->endpoint
-                                .baseUri("/oauth2/authorize")
+                                .baseUri("/oauth2/authorization")
                                 .authorizationRequestRepository(cookieAuthorizationRequestRepository))
                         .redirectionEndpoint(redirection -> redirection
                                 .baseUri("/login/oauth2/code/*"))

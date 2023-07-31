@@ -31,7 +31,7 @@ public class InsertData {
                 .email("test@test.com")
                 .name("test")
                 .picture("https://tistory1.daumcdn.net/tistory/3095648/attach/ad5c70ba90d7493db85c371ffb9d0f89")
-                .oauth2Id("test")
+                .socialType("test")
                 .role(Role.USER)
                 .build();
         memberRepository.save(member);
