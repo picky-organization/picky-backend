@@ -15,7 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Project extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne(optional = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
@@ -24,14 +29,13 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<ProjectTech> projectTeches;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    private List<ProjectComment> projectComments;
 
     @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false,  length = 65535, columnDefinition="TEXT")
     private String content;
 
     @Column(nullable = false, length = 2083)
@@ -92,4 +96,7 @@ public class Project extends BaseEntity {
     public void increaseViewCount(){
         this.viewCount++;
     }
+    public void increaseCommentCount(){this.commentCount++;}
+    public void decreaseCommentCount(){this.commentCount--;}
+    public void decreaseCommentCount(int count){this.commentCount-=count;}
 }
