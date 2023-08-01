@@ -13,16 +13,16 @@ import java.util.Map;
 
 public class GithubOAuth2User extends OAuth2UserInfo {
 
-    private final String apiUrl = "https://api.github.com/user/emails";
+    private static final String apiUrl = "https://api.github.com/user/emails";
     private final String accessToken;
 
     public GithubOAuth2User(Map<String, Object> attributes, String accessToken){
         super(new HashMap<>(attributes));
         this.accessToken = accessToken;
         try {
-            this.attributes.replace("email", getUserEmails());
-        }catch (ParseException ex){
-
+            super.attributes.replace("email", getUserEmails());
+        }catch (ParseException ex) {
+            ex.printStackTrace();
         }
     }
 
