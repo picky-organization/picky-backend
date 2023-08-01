@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import network.picky.web.auth.domain.SavedToken;
 import network.picky.web.auth.dto.AuthUser;
-import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.repository.SavedTokenRepository;
 import network.picky.web.auth.token.JwtTokenProvider;
 import network.picky.web.member.domain.Member;
@@ -17,19 +16,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
-
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
-    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final SavedTokenRepository refreshTokenRepository;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         if (response.isCommitted()) {
             log.debug("Response has already been committed.");
             return;

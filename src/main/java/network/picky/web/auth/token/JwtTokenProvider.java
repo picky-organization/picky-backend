@@ -66,19 +66,6 @@ public class JwtTokenProvider implements TokenProvider {
                 .setExpiration(expiration).signWith(key).compact();
     }
 
-//	public MemberResponseDto.TokenInfo generateToken(AuthUser authUser){
-//		String accessToken = createAccessToken(authUser);
-//		String refreshToken = createRefreshToken(authUser);
-//
-//		return MemberResponseDto.TokenInfo.builder()
-//				.grantType(AUTHORIZATION_PREFIX)
-//				.accessToken(accessToken)
-//				.accessTokenExpirationTime(this.accessTokenExpiredMilliseconds)
-//				.refreshToken(refreshToken)
-//				.refreshTokenExpirationTime(this.refreshTokenExpiredMilliseconds)
-//				.build();
-//	}
-
     public boolean validToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parserBuilder()
@@ -103,8 +90,7 @@ public class JwtTokenProvider implements TokenProvider {
         try {
             Long id = Long.parseLong(body.getSubject());
             Role role = Role.valueOf(String.valueOf(body.get("role")));
-            AuthUser authUser = new AuthUser(id, role);
-            return authUser;
+            return new AuthUser(id, role);
         } catch (Exception ex) {
             log.debug("JwtTokenProvider parsing faild");
             throw new TokenParsingException();

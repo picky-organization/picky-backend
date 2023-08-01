@@ -1,7 +1,6 @@
 package network.picky.web.auth;
 
 import lombok.Getter;
-import lombok.Setter;
 import network.picky.web.member.domain.Member;
 import network.picky.web.member.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,20 +17,16 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private final Long id;
     private final String email;
     private final List<? extends GrantedAuthority> authorities;
-    @Setter
     private Map<String, Object> attributes;
-
-    public UserPrincipal(Long id, String email, List<? extends GrantedAuthority> authorities, Map<String, Object> attributes) {
-        this.id = id;
-        this.email = email;
-        this.authorities = authorities;
-        this.attributes = attributes;
-    }
 
     public UserPrincipal(Long id, String email, List<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.authorities = authorities;
+    }
+
+    public void setAttributes(Map<String, Object> attributes) {
+        this.attributes = attributes;
     }
 
     public static UserPrincipal create(Member member, Map<String, Object> attributes) {
