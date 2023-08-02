@@ -1,4 +1,4 @@
-package network.picky.web.auth.domain;
+package network.picky.web.auth.jwt.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

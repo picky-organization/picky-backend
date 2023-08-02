@@ -2,13 +2,14 @@ package network.picky.web.auth.provider;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import network.picky.web.auth.dto.AuthUser;
-import network.picky.web.auth.dto.JwtAuthenticationToken;
-import network.picky.web.auth.dto.RoleGrant;
+import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.jwt.token.JwtAuthenticationToken;
+import network.picky.web.auth.domain.RoleGrant;
 import network.picky.web.auth.exception.TokenAuthenticationException;
 import network.picky.web.auth.exception.TokenInvalidException;
 import network.picky.web.auth.exception.TokenParsingException;
-import network.picky.web.auth.token.JwtTokenProvider;
+import network.picky.web.auth.jwt.token.JwtAuthenticationProvider;
+import network.picky.web.auth.jwt.token.JwtTokenProvider;
 import network.picky.web.member.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,6 +1,5 @@
-package network.picky.web.auth;
+package network.picky.web.auth.dto;
 
-import network.picky.web.auth.dto.OAuth2UserInfo;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

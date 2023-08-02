@@ -1,6 +1,6 @@
-package network.picky.web.auth.repository;
+package network.picky.web.auth.jwt.repository;
 
-import network.picky.web.auth.domain.SavedToken;
+import network.picky.web.auth.jwt.domain.SavedToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

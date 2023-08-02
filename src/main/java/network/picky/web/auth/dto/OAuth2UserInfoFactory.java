@@ -1,7 +1,5 @@
 package network.picky.web.auth.dto;
 
-import network.picky.web.auth.GithubOAuth2User;
-import network.picky.web.auth.GoogleOAuth2User;
 import network.picky.web.auth.enums.AuthProvider;
 
 import java.util.Map;

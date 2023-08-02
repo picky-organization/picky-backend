@@ -1,4 +1,4 @@
-package network.picky.web.auth.lib;
+package network.picky.web.auth.cookie;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

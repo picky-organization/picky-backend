@@ -1,4 +1,4 @@
-package network.picky.web.auth.dto;
+package network.picky.web.auth.jwt.token;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,7 +9,7 @@ import java.util.Collections;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private Long id;
-    private String token;
+    private final String token;
 
     public JwtAuthenticationToken(String token) {
         super(Collections.emptyList());

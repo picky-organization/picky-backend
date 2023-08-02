@@ -1,4 +1,4 @@
-package network.picky.web.auth;
+package network.picky.web.auth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
+import network.picky.web.auth.cookie.CookieAuthorizationRequestRepository;
 import network.picky.web.common.error.ErrorResponse;
 import network.picky.web.common.exception.BaseHttpStatusException;
 import org.springframework.security.core.AuthenticationException;

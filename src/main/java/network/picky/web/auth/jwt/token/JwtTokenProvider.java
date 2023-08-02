@@ -1,10 +1,10 @@
-package network.picky.web.auth.token;
+package network.picky.web.auth.jwt.token;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import network.picky.web.auth.dto.AuthUser;
+import network.picky.web.auth.domain.AuthUser;
 import network.picky.web.auth.exception.TokenParsingException;
 import network.picky.web.member.enums.Role;
 import org.springframework.beans.factory.annotation.Value;

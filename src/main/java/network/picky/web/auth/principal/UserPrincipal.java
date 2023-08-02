@@ -1,4 +1,4 @@
-package network.picky.web.auth;
+package network.picky.web.auth.principal;
 
 import lombok.Getter;
 import network.picky.web.member.domain.Member;

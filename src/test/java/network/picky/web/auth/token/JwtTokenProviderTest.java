@@ -1,6 +1,7 @@
 package network.picky.web.auth.token;
 
-import network.picky.web.auth.dto.AuthUser;
+import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.jwt.token.JwtTokenProvider;
 import network.picky.web.member.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
