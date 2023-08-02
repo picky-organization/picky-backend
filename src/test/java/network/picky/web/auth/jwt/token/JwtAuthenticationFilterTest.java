@@ -1,14 +1,11 @@
-package network.picky.web.auth.filter;
+package network.picky.web.auth.jwt.token;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import network.picky.web.auth.jwt.token.JwtAuthenticationToken;
 import network.picky.web.auth.exception.TokenAuthenticationException;
 import network.picky.web.auth.exception.TokenInvalidException;
-import network.picky.web.auth.jwt.token.JwtAuthenticationFilter;
-import network.picky.web.auth.jwt.token.BearerTokenResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
