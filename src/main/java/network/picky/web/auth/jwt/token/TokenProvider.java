@@ -1,6 +1,6 @@
 package network.picky.web.auth.jwt.token;
 
-import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.dto.AuthUser;
 
 public interface TokenProvider {
 
