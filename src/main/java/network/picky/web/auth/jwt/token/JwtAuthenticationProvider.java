@@ -2,7 +2,7 @@ package network.picky.web.auth.jwt.token;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.dto.AuthUser;
 import network.picky.web.auth.domain.RoleGrant;
 import network.picky.web.auth.exception.TokenAuthenticationException;
 import network.picky.web.auth.exception.TokenInvalidException;
