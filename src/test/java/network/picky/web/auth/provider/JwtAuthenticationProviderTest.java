@@ -2,7 +2,7 @@ package network.picky.web.auth.provider;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.dto.AuthUser;
 import network.picky.web.auth.jwt.token.JwtAuthenticationToken;
 import network.picky.web.auth.domain.RoleGrant;
 import network.picky.web.auth.exception.TokenAuthenticationException;
