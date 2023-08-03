@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import network.picky.web.auth.dto.OAuth2UserInfo;
 import network.picky.web.auth.enums.AuthProvider;
 import network.picky.web.common.domain.BaseEntity;
 import network.picky.web.member.enums.Role;
@@ -14,9 +13,11 @@ import network.picky.web.member.enums.Role;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true, nullable = false, length = 255)
     private String email;
 
@@ -29,19 +30,19 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = true, length = 200)
+    @Column(length = 200)
     private String introduce;
 
-    @Column(nullable = true, length = 20)
+    @Column(length = 20)
     private String field;
 
-    @Column(nullable = true, length = 2083)
+    @Column(length = 2083)
     private String github;
 
-    @Column(nullable = true, length = 2083)
+    @Column(length = 2083)
     private String facebook;
 
-    @Column(nullable = true, length = 2083)
+    @Column(length = 2083)
     private String instagram;
 
     @Column(nullable = false)
@@ -83,6 +84,7 @@ public class Member extends BaseEntity {
     public void increaseProjectCount(){
         this.projectCount++;
     }
+
     public void decreaseProjectCount(){
         this.projectCount--;
     }
