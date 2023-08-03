@@ -5,8 +5,8 @@ import network.picky.web.member.enums.Role;
 
 @Getter
 public class AuthUser {
-    private Long id;
-    private Role role;
+    private final Long id;
+    private final Role role;
 
     public AuthUser(Long id, Role role) {
         this.id = id;
