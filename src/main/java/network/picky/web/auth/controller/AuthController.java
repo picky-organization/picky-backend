@@ -2,7 +2,7 @@ package network.picky.web.auth.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.dto.AuthUser;
 import network.picky.web.auth.jwt.repository.SavedTokenRepository;
 import network.picky.web.auth.jwt.token.JwtTokenProvider;
 import org.springframework.http.HttpHeaders;
