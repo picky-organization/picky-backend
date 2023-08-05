@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.dto.AuthUser;
 import network.picky.web.auth.exception.TokenParsingException;
 import network.picky.web.member.enums.Role;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +20,8 @@ import java.util.Map;
 @Getter
 @Component
 public class JwtTokenProvider implements TokenProvider {
-    public static final String AUTHORIZATION_PREFIX = "Bearer";
 
+    public static final String AUTHORIZATION_PREFIX = "Bearer";
     private final Key key;
     private final int accessTokenExpiredMilliseconds;
     private final int refreshTokenExpiredMilliseconds;
@@ -54,7 +54,9 @@ public class JwtTokenProvider implements TokenProvider {
     @Override
     public String createRefreshToken(AuthUser authUser) {
         Role role = authUser.getRole();
+        Long memberId = authUser.getId();
         Map<String, Object> claim = new HashMap<>();
+        claim.put("id", memberId);
         claim.put("role", role);
         Date now = new Date();
         Date expiration = new Date(now.getTime() + this.refreshTokenExpiredMilliseconds);

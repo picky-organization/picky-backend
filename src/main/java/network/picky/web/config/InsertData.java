@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import network.picky.web.auth.dto.AuthUser;
-import network.picky.web.auth.token.JwtTokenProvider;
+import network.picky.web.auth.jwt.token.JwtTokenProvider;
 import network.picky.web.category.dto.CategorySaveRequestDto;
 import network.picky.web.category.service.CategoryService;
 import network.picky.web.member.domain.Member;

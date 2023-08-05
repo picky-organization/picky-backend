@@ -5,9 +5,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import network.picky.web.auth.principal.UserPrincipal;
+import network.picky.web.auth.domain.UserPrincipal;
 import network.picky.web.auth.jwt.domain.SavedToken;
-import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.dto.AuthUser;
 import network.picky.web.auth.jwt.repository.SavedTokenRepository;
 import network.picky.web.auth.jwt.token.JwtTokenProvider;
 import network.picky.web.member.domain.Member;
@@ -53,7 +53,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.addHeader(HttpHeaders.AUTHORIZATION, authorizationScheme);
 
         response.setStatus(HttpServletResponse.SC_OK);
-        log.info(refreshToken);
+
+        log.info("refreshToken : {}", refreshToken);
+        log.info("authorizationScheme: {}", authorizationScheme);
     }
 
 }
