@@ -71,7 +71,6 @@ public class ProjectService {
 
     public ProjectResponseDto read(Long id) throws ProjectNotFoundException{
        Project project =  projectRepository.findById(id).orElseThrow(ProjectNotFoundException::new);
-        project.getMember().increaseProjectCount();
         project.increaseViewCount();
        return new ProjectResponseDto(project);
     }
