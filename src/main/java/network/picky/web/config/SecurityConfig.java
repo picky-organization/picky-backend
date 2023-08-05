@@ -1,10 +1,10 @@
 package network.picky.web.config;
 
 import lombok.RequiredArgsConstructor;
+import network.picky.web.auth.cookie.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.handler.OAuth2AuthenticationFailureHandler;
 import network.picky.web.auth.handler.OAuth2AuthenticationSuccessHandler;
 import network.picky.web.auth.jwt.token.JwtAuthenticationFilter;
-import network.picky.web.auth.cookie.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.service.CustomOAuth2UserService;
 import network.picky.web.member.enums.Role;
 import org.springframework.context.annotation.Bean;
@@ -13,15 +13,19 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableWebSecurity
+@EnableTransactionManagement(order = 0)
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;

@@ -24,6 +24,7 @@ import network.picky.web.tech.exception.TechNotFoundException;
 import network.picky.web.tech.repository.TechRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -75,6 +76,7 @@ public class ProjectService {
        return new ProjectResponseDto(project);
     }
 
+    @PostAuthorize("hasRole('ADMIN') || returnObject.getMemberSummary().getId() == principal")
     public ProjectResponseDto update(Long id, ProjectSaveRequestDto projectSaveRequestDto) throws ProjectNotFoundException{
         List<Category> categories = findAndValidCategories(projectSaveRequestDto.getCategories());
         List<Tech> teches = findAndValidTeches(projectSaveRequestDto.getTeches());
@@ -119,14 +121,18 @@ public class ProjectService {
         projectTechRepository.deleteAll(deleteProjectTeches);
         projectTechRepository.saveAll(appendProjectTeches);
         project.updateProjectTeches(insertProjectTeches);
-
-        return new ProjectResponseDto(project);
+        ProjectResponseDto projectResponseDto = new ProjectResponseDto(project);
+        return projectResponseDto;
     }
 
-    public void delete(Long id) throws ProjectNotFoundException{
+    @PostAuthorize("hasRole('ADMIN') || returnObject.getMemberSummary().getId() == principal")
+    public ProjectResponseDto delete(Long id) throws ProjectNotFoundException{
         Project project =  projectRepository.findById(id).orElseThrow(ProjectNotFoundException::new);
         project.getMember().decreaseProjectCount();
         projectRepository.delete(project);
+
+        ProjectResponseDto responseDto = new ProjectResponseDto(project);
+        return responseDto;
     }
 
 
