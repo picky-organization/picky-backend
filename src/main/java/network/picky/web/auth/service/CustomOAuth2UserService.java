@@ -2,7 +2,7 @@ package network.picky.web.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import network.picky.web.auth.dto.OAuth2UserInfoFactory;
-import network.picky.web.auth.UserPrincipal;
+import network.picky.web.auth.principal.UserPrincipal;
 import network.picky.web.auth.dto.OAuth2UserInfo;
 import network.picky.web.auth.enums.AuthProvider;
 import network.picky.web.auth.exception.AttributeNotFoundException;
@@ -50,7 +50,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         //이미 가입된 경우
         if (member != null) {
             if (!member.getAuthProvider().equals(authProvider)) {
-//                throw new MemberExistsException("이미 가입된 이메일입니다. " , member.getSocialType());
                 throw new DuplicatedAuthenticationException(member.getSocialType() + "로 이미 회원가입이 되어있습니다.", new ConflictException());
             }
         }

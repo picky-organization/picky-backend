@@ -1,13 +1,11 @@
-package network.picky.web.auth.filter;
+package network.picky.web.auth.jwt.token;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import network.picky.web.auth.dto.JwtAuthenticationToken;
 import network.picky.web.auth.exception.TokenInvalidException;
-import network.picky.web.auth.token.BearerTokenResolver;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -26,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = null;
+        String token;
         try {
             token = bearerTokenResolver.resolve(request);
         } catch (TokenInvalidException invalid) {

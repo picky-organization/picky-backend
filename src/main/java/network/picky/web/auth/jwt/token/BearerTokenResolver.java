@@ -1,4 +1,4 @@
-package network.picky.web.auth.token;
+package network.picky.web.auth.jwt.token;
 
 import jakarta.servlet.http.HttpServletRequest;
 import network.picky.web.auth.exception.TokenInvalidException;

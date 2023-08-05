@@ -1,10 +1,10 @@
 package network.picky.web.config;
 
 import lombok.RequiredArgsConstructor;
-import network.picky.web.auth.OAuth2AuthenticationFailureHandler;
-import network.picky.web.auth.OAuth2AuthenticationSuccessHandler;
-import network.picky.web.auth.filter.JwtAuthenticationFilter;
-import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
+import network.picky.web.auth.handler.OAuth2AuthenticationFailureHandler;
+import network.picky.web.auth.handler.OAuth2AuthenticationSuccessHandler;
+import network.picky.web.auth.jwt.token.JwtAuthenticationFilter;
+import network.picky.web.auth.cookie.CookieAuthorizationRequestRepository;
 import network.picky.web.auth.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

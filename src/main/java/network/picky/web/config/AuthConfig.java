@@ -1,6 +1,6 @@
 package network.picky.web.config;
 
-import network.picky.web.auth.provider.JwtAuthenticationProvider;
+import network.picky.web.auth.jwt.token.JwtAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ProviderManager;

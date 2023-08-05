@@ -1,11 +1,10 @@
-package network.picky.web.auth.lib;
+package network.picky.web.auth.cookie;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.util.SerializationUtils;
 
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -21,13 +20,6 @@ public class CookieUtils {
             }
         }
         return Optional.empty();
-    }
-
-    public static Optional<String> readServletCookie(HttpServletRequest request, String name) {
-        return Arrays.stream(request.getCookies())
-                .filter(cookie -> name.equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .findAny();
     }
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {

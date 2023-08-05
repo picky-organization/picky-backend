@@ -1,15 +1,15 @@
-package network.picky.web.auth;
+package network.picky.web.auth.handler;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import network.picky.web.auth.domain.SavedToken;
-import network.picky.web.auth.dto.AuthUser;
-import network.picky.web.auth.repository.CookieAuthorizationRequestRepository;
-import network.picky.web.auth.repository.SavedTokenRepository;
-import network.picky.web.auth.token.JwtTokenProvider;
+import network.picky.web.auth.principal.UserPrincipal;
+import network.picky.web.auth.jwt.domain.SavedToken;
+import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.jwt.repository.SavedTokenRepository;
+import network.picky.web.auth.jwt.token.JwtTokenProvider;
 import network.picky.web.member.domain.Member;
 import network.picky.web.member.enums.Role;
 import org.springframework.http.HttpHeaders;
@@ -17,19 +17,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
-
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
-    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final SavedTokenRepository refreshTokenRepository;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         if (response.isCommitted()) {
             log.debug("Response has already been committed.");
             return;

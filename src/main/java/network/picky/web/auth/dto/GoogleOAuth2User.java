@@ -1,6 +1,4 @@
-package network.picky.web.auth;
-
-import network.picky.web.auth.dto.OAuth2UserInfo;
+package network.picky.web.auth.dto;
 
 import java.util.Map;
 

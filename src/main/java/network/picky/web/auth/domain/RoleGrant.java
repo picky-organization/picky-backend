@@ -1,4 +1,4 @@
-package network.picky.web.auth.dto;
+package network.picky.web.auth.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;

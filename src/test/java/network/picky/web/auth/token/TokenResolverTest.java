@@ -2,6 +2,7 @@ package network.picky.web.auth.token;
 
 import jakarta.servlet.http.HttpServletRequest;
 import network.picky.web.auth.exception.TokenInvalidException;
+import network.picky.web.auth.jwt.token.BearerTokenResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

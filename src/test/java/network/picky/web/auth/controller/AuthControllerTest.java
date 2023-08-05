@@ -1,10 +1,10 @@
 package network.picky.web.auth.controller;
 
 import jakarta.servlet.http.Cookie;
-import network.picky.web.auth.domain.SavedToken;
-import network.picky.web.auth.dto.AuthUser;
-import network.picky.web.auth.repository.SavedTokenRepository;
-import network.picky.web.auth.token.JwtTokenProvider;
+import network.picky.web.auth.jwt.domain.SavedToken;
+import network.picky.web.auth.domain.AuthUser;
+import network.picky.web.auth.jwt.repository.SavedTokenRepository;
+import network.picky.web.auth.jwt.token.JwtTokenProvider;
 import network.picky.web.member.domain.Member;
 import network.picky.web.member.enums.Role;
 import org.junit.jupiter.api.DisplayName;
