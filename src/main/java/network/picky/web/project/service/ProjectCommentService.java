@@ -15,6 +15,7 @@ import network.picky.web.project.exception.ProjectCommentNotFoundException;
 import network.picky.web.project.exception.ProjectNotFoundException;
 import network.picky.web.project.repository.ProjectCommentRepository;
 import network.picky.web.project.repository.ProjectRepository;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,6 +67,7 @@ public class ProjectCommentService {
         return new ProjectCommentResponseDto(projectComment, childSize);
     }
 
+    @PostAuthorize("hasRole('ADMIN') || returnObject.getMemberSummary().getId() == principal")
     public ProjectCommentResponseDto update(Long id, ProjectCommentUpdateRequestDto projectCommentUpdateRequestDto) throws ProjectCommentNotFoundException {
         ProjectComment projectComment = projectCommentRepository.findById(id).orElseThrow(ProjectCommentNotFoundException::new);
         projectComment.update(projectCommentUpdateRequestDto);
@@ -74,7 +76,8 @@ public class ProjectCommentService {
         return new ProjectCommentResponseDto(updatedProjectComment, childCount);
     }
 
-    public void delete(Long id) throws ProjectCommentNotFoundException {
+    @PostAuthorize("hasRole('ADMIN') || returnObject.getMemberSummary().getId() == principal")
+        public ProjectCommentResponseDto delete(Long id) throws ProjectCommentNotFoundException {
         ProjectComment projectComment = projectCommentRepository.findById(id).orElseThrow(ProjectCommentNotFoundException::new);
         int childCount = projectCommentRepository.countByParent(projectComment);
         if (childCount > 0) {
@@ -83,5 +86,8 @@ public class ProjectCommentService {
         }
         projectComment.getProject().decreaseCommentCount();
         projectCommentRepository.delete(projectComment);
+
+        ProjectCommentResponseDto projectCommentResponseDto = new ProjectCommentResponseDto(projectComment);
+        return projectCommentResponseDto;
     }
 }

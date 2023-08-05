@@ -9,7 +9,7 @@ public class ProjectCommentResponseDto {
     @Positive @NotNull
     private Long id;
     @NotNull
-    private MemberSummaryResponseDto memberSummaryResponseDto;
+    private MemberSummaryResponseDto memberSummary;
     @Positive @NotNull
     private Long projectId;
     @Null @Positive
@@ -21,7 +21,7 @@ public class ProjectCommentResponseDto {
 
     public ProjectCommentResponseDto(ProjectComment projectComment, int childSize){
         this.id = projectComment.getId();
-        this.memberSummaryResponseDto = new MemberSummaryResponseDto(projectComment.getMember());
+        this.memberSummary = new MemberSummaryResponseDto(projectComment.getMember());
         this.projectId = projectComment.getProject().getId();
         if (projectComment.getParent() != null) {
             this.parentId = projectComment.getParent().getId();
@@ -31,7 +31,7 @@ public class ProjectCommentResponseDto {
     }
     public ProjectCommentResponseDto(ProjectComment projectComment){
         this.id = projectComment.getId();
-        this.memberSummaryResponseDto = new MemberSummaryResponseDto(projectComment.getMember());
+        this.memberSummary = new MemberSummaryResponseDto(projectComment.getMember());
         this.projectId = projectComment.getProject().getId();
         if (projectComment.getParent() != null) {
             this.parentId = projectComment.getParent().getId();

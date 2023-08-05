@@ -213,7 +213,7 @@ class ProjectCommentControllerTest {
     @DisplayName("get : 정상")
     @Test
     void getTest() throws Exception {
-        String path = "/project/comment/"+commentId;
+        String path = "/project/"+projectId+"/comment/"+commentId;
 
         Member member = createMember(memberId);
         Project project = createProject(projectId, member);
@@ -238,7 +238,7 @@ class ProjectCommentControllerTest {
     @Test
     void getTestNotFound() throws Exception {
         //given
-        String path = "/project/comment/"+commentId;
+        String path = "/project/"+projectId+"/comment/"+commentId;
 
         Mockito.when(projectCommentService.read(commentId)).thenThrow(ProjectCommentNotFoundException.class);
 
@@ -256,7 +256,7 @@ class ProjectCommentControllerTest {
     @Test
     void getTestIdWrong() throws Exception {
         //given
-        String path = "/project/comment/"+"wrong";
+        String path = "/project/"+projectId+"/comment/"+"wrong";
 
         //when
         ResultActions ra = mvc.perform(get(path));
@@ -273,7 +273,7 @@ class ProjectCommentControllerTest {
     @Test
     void getTestIdToLong() throws Exception {
         //given
-        String path = "/project/comment/"+ Long.MAX_VALUE+1;
+        String path = "/project/"+projectId+"/comment/"+ Long.MAX_VALUE+1;
 
         //when
         ResultActions ra = mvc.perform(get(path));
@@ -290,7 +290,7 @@ class ProjectCommentControllerTest {
     @Test
     void putTest() throws Exception {
         //given
-        String path = "/project/comment/"+commentId;
+        String path = "/project/"+projectId+"/comment/"+commentId;
 
         Member member = createMember(memberId);
         Project project = createProject(projectId, member);
@@ -318,7 +318,7 @@ class ProjectCommentControllerTest {
     @Test
     void putTestEmptyRequest() throws Exception {
         //given
-        String path = "/project/comment/"+commentId;
+        String path = "/project/"+projectId+"/comment/"+commentId;
 
         //when
         ResultActions ra = mvc.perform(put(path));
@@ -334,7 +334,7 @@ class ProjectCommentControllerTest {
     @Test
     void putTestInvalidRequest() throws Exception {
         //given
-        String path = "/project/comment/"+commentId;
+        String path = "/project/"+projectId+"/comment/"+commentId;
 
         Map<String, String> request = new HashMap<>();
 
@@ -355,7 +355,7 @@ class ProjectCommentControllerTest {
     @Test
     void putTestIdWrong() throws Exception {
         //given
-        String path = "/project/comment/"+"wrong";
+        String path = "/project/"+projectId+"/comment/"+"wrong";
 
         //when
         ResultActions ra = mvc.perform(put(path));
@@ -372,7 +372,7 @@ class ProjectCommentControllerTest {
     @Test
     void putTestIdToLong() throws Exception {
         //given
-        String path = "/project/comment/" + Long.MAX_VALUE+1;
+        String path = "/project/"+projectId+"/comment/" + Long.MAX_VALUE+1;
 
         //when
         ResultActions ra = mvc.perform(put(path));
@@ -389,7 +389,7 @@ class ProjectCommentControllerTest {
     @Test
     void deleteTest() throws Exception {
         //given
-        String path = "/project/comment/" + commentId;
+        String path = "/project/"+projectId+"/comment/" + commentId;
 
         //when
         ResultActions ra = mvc.perform(delete(path));
@@ -405,7 +405,7 @@ class ProjectCommentControllerTest {
     @Test
     void deleteTestIdWrong() throws Exception {
         //given
-        String path = "/project/comment/" + "wrong";
+        String path = "/project/"+projectId+"/comment/" + "wrong";
 
         //when
         ResultActions ra = mvc.perform(delete(path));
@@ -422,7 +422,7 @@ class ProjectCommentControllerTest {
     @Test
     void deleteTestIdToLonng() throws Exception {
         //given
-        String path = "/project/comment/" + Long.MAX_VALUE+1;
+        String path = "/project/"+projectId+"/comment/" + Long.MAX_VALUE+1;
 
         //when
         ResultActions ra = mvc.perform(delete(path));
