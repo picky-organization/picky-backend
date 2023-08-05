@@ -36,20 +36,20 @@ public class ProjectCommentController {
         return ResponseEntity.created(readLocation).build();
     }
 
-    @GetMapping("/project/comment/{commentId}")
-    public ResponseEntity<ProjectCommentResponseDto> get(@PathVariable Long commentId) {
+    @GetMapping("/project/{projectId}/comment/{commentId}")
+    public ResponseEntity<ProjectCommentResponseDto> get(@PathVariable("commentId") Long commentId) {
         ProjectCommentResponseDto projectCommentResponseDto = projectCommentService.read(commentId);
         return ResponseEntity.ok(projectCommentResponseDto);
     }
 
-    @PutMapping("/project/comment/{commentId}")
-    public ResponseEntity<ProjectCommentResponseDto> put(@PathVariable Long commentId, @RequestBody @Valid ProjectCommentUpdateRequestDto projectCommentUpdateRequestDto) {
+    @PutMapping("/project/{projectId}/comment/{commentId}")
+    public ResponseEntity<ProjectCommentResponseDto> put(@PathVariable("commentId") Long commentId, @RequestBody @Valid ProjectCommentUpdateRequestDto projectCommentUpdateRequestDto) {
         ProjectCommentResponseDto projectCommentResponseDto = projectCommentService.update(commentId, projectCommentUpdateRequestDto);
         return ResponseEntity.ok(projectCommentResponseDto);
     }
 
-    @DeleteMapping("/project/comment/{commentId}")
-    public ResponseEntity delete(@PathVariable Long commentId) {
+    @DeleteMapping("/project/{projectId}/comment/{commentId}")
+    public ResponseEntity delete(@PathVariable("commentId") Long commentId) {
         projectCommentService.delete(commentId);
         return ResponseEntity.noContent().build();
     }
