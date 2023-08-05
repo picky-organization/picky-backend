@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import network.picky.web.auth.principal.UserPrincipal;
+import network.picky.web.auth.domain.UserPrincipal;
 import network.picky.web.auth.jwt.domain.SavedToken;
 import network.picky.web.auth.dto.AuthUser;
 import network.picky.web.auth.jwt.repository.SavedTokenRepository;

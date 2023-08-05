@@ -2,7 +2,7 @@ package network.picky.web.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import network.picky.web.auth.dto.OAuth2UserInfoFactory;
-import network.picky.web.auth.principal.UserPrincipal;
+import network.picky.web.auth.domain.UserPrincipal;
 import network.picky.web.auth.dto.OAuth2UserInfo;
 import network.picky.web.auth.enums.AuthProvider;
 import network.picky.web.auth.exception.AttributeNotFoundException;
